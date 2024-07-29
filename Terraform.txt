@@ -1,0 +1,30 @@
+terraform command
+
+-----------------
+
+create a file with .tf
+
+1. terraform init - to create environment
+
+2. terraform plan - to see what are all going to get created
+
+3. terraform apply - to run the terraform file
+   
+    terraform apply --auto-approve (doesn't ask for confirmation)
+
+4. terraform refresh - to synch the changes
+
+5. terraform fmt - for formatting the file
+
+6. terraform destroy - to destroy 
+   terraform destroy --auto-approve (doesn't ask for confirmation)
+
+7. to destroy specific
+    
+terraform destroy -target aws_instance.web -> if you have one instance
+
+terraform destroy -target aws_instance.web[n] --> n is the index of instance
+web -> name of the resource (it could be anything)
+
+7. count is a meta argument . It is used to create multiple instances with the same configuration
+
