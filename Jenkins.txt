@@ -1,0 +1,226 @@
+/var/lib/jenkins/workspace/test-c-project
+To do build, we use build script
+
+-------------------------build.sh-------------------------------------------------------
+
+#!/bin/bash
+
+git pull url
+
+if [ $? -ne 0 ];then
+ 
+  git clone url
+fi
+
+cd /repo/
+
+mvn clean deploy
+if [ $? -eq 0 ];then
+echo "build is success"
+scp file.war user@server:/webapps
+else
+echo "build failed"
+fi
+--------------------------------------------------------------------------
+
+CI ---> integrate changes from dev team continuously without manual intervention. we can give quick feedback to developers 
+
+CD (continuous deployment)---> deploy tested build to PROD environment as early as possible
+
+CD (Continuous delivery) ---> each change from dev team should built and deployed to test env to test chnages 
+
+
+CI/CD tool -->Jenkins
+
+
+Build periodically ---> it will trigger jenkins job based on time whether commit or no commit
+
+poll SCM  --> it will trigger jenkins job only there are commit within specified time period
+
+------------------------------------------------------------------------------------------------------------------------------------
+
+install jenkins 
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+sudo yum install epel-release # repository that provides 'daemonize'
+sudo yum install java-11-openjdk-devel
+sudo yum install jenkins  --nobest
+
+
+
+sudo service jenkins start
+
+ps -ef | grep jenkins 
+
+
+go browser
+
+serverIP:8080
+
+click "install suggested plugins"
+
+-----------------------------------------------------------------------------------------------------------------------------------
+==================================================================================================
+
+master- slave  ---> used to distribute load different servers and also we can specific job on specifi server.
+for example, java job can run on the server which provide java environment for compilation
+
+server on which jenkins is installed called as master. 
+
+go to manage jenkins  ---> manage Nodes and clouds  ---> new node ----> give node name 
+
+
+it take you to configure page of node
+
+number of executor: it indicates how many jobs we can run on that server parallely
+
+root directory: indicats on which path we need to jenkins job on this server
+
+how do you run jenkins job on available server?
+
+using lable, give same label name to similar servers. go jekins job and give label name instead of server name 
+
+
+how do you connect from jenkins server to slave machine?
+
+via ssh
+
+-------------------------------------------------------------------------------------------------------------------------------- 
+
+Enable password connection on slaves before you add slave machines 
+---------------------------------------------------------------------------
+
+how to login to server with password authenttication
+
+
+login to server1 with root user using "sudo su -"
+
+sudo vi /etc/ssh/sshd_config
+
+go to the last line of this file and 
+
+change from "PasswordAuthentication no" to "PasswordAuthentication yes" 
+
+set password for any user (ec2-user)
+
+sudo passwd ec2-user
+new password:
+
+sudo service sshd resatrt
+
+go to another serevr (server2) and run below command 
+you can login to this server using password
+
+ssh ec2-user@server1
+password :
+
+enter password you set and login
+---------------------------------------------------------------------------------------------------
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+Assignment (webhooks):
+Jenkins job should get triggered automatically as soon as commit code on github repo
+----------------------------------------------------------------------------------------
+
+configure webhooks
+
+go to settings ---> webooks --> Add webhook ---> 
+
+payload URL : http://52.201.250.59:8080/github-webhook/
+
+you can select option "Let me select induvial event"
+
+select "commit messages"
+
+go jenkins job, under build triggers, select "Github triggers for Gitscm polling"
+
+go and commit on repo, check jenkins job getting triggered ot not  
+------------------------------------------------------------------------------------------------------
+Assignment (master slave) : add two slave machines and run two different jenkins jobs on that two machines
+
+for C project, create job and run this job on one node. it should get triggered by webhooks
+for java, create job for java project and run on another node. it should get triggered by webhooks
+
+--------------------------------------------------------------------------------------------------------------
+Assignment(build->deployment->testing)
+
+create 3 jobs build job , deployment job and Testing job
+
+build job should get triggered automatically by github commit, it should pull source code from github, compile it and generate binary
+once build job sucesss, it should trigger, deployment job, this job will deploy war file to tomcat serevr and run BVT
+then testing job should get triggered 
+
+
+---------------------------------------------------------------------------------------------------
+
+How do you take jenkins backup??
+
+take backup of /var/lib/jenkins and store it in separate github repo for jenkins.
+incase if current jenkins server goes down.. clone it from github and  copy it to /var/lib/jenkns
+===========================================================================================================
+How do you secure jenkins?
+
+we use matrix based security. It allows us to provide permissions by using checkboxes. 
+
+----------------------------------------------------------------------------------------------------------
+go to manage jenkins --->  security ---> jenkins own user database --> check allow users to sign up
+
+select matrix based security----> add users and provide permission
+------------------------------------------------------------------------------------------------------------------------------
+
+
+
+===============Explain CI/CD? or what is CI/CD? or explain ur project responsibilities?=============================important======================
+
+As soon as developer pushes code to github. Jenkins pipeline job will get triggered, it has three stages, Build, Deploy and test stages.
+In build stage, It will pull source code from github, compiles it and generates binary. Once build stage is success, deploy stage will get triggered
+It will deploy war file tom tomcat server and runs BVT. Next,test stage will get triggered, it runs test cases given by test team. 
+if there are any test failures will be taken care by testing team. if there are any integration issues , it will be taken care by devops team.
+
+
+-------------------------------------------------------------------------------------------------
+
+Assignment : 
+install these plugins
+
+artifatcory 
+gearman - high availability server . If master goes down , it will make the server 2 to act as master
+upstream and down stream - if we want to pass output of job1 to job2 and to build k=job2 after job1 . 
+pass output of job2 to job3 , build job3
+
+parametrised plugin 
+qualitygate 
+=========================================================================
+
+fork --> replica of central repo
+------------------------------------------
+PR (pull request)
+
+developer will fork central repo and makes changes to source code, then he will raise PR, PR should be reviewed by reviewer and merge it to central repo.
+
+once code get merged to central repo. jenkins pipeline job will get trigered.
+---------------------------------------------------------------------------------------------------------------------------
+
+-----------------------------------------------------------------------------------------------------------------------
+
+Sonarqube---> used to check quality of source code. if quality of sorce code is more than 70%, then quality of source code is good.
+
+need to create quality gate and mention all rules under quality gate. Intgrate quality gate with jenkins
+
+--------------------------------------------------------------------------------------------------------------------------------
+Artifactory
+JROG artifactory is used to store binaries or build 
+
+------------------------------------------------------------------------------------------------------
+
+Blue-green deployment
+A blue/green deployment is a deployment strategy in which you create two separate, but identical environments. One environment (blue) is running the current application version and one environment (green) is running the new application version
+
+Blue-green deployment is a technique for rolling out new software designs or updates without causing downtime, typically used in DevOps scenarios for web app maintenance. It requires two exactly same hardware environments set up for one application
+
+
+
