@@ -1,3 +1,16 @@
+to install terraform
+
+1.  wget https://releases.hashicorp.com/terraform/1.9.3/terraform_1.9.3_linux_amd64.zip
+2.  unzip terraform_1.9.3_linux_amd64.zip
+3. sudo mv terraform /usr/bin/
+4.  chmod +x /usr/bin/terraform
+5. terraform --version
+
+
+
+------------------------------------------
+
+
 terraform command
 
 -----------------

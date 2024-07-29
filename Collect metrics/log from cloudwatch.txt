@@ -1,0 +1,36 @@
+
+Reference https://youtu.be/dejZo4SWX7Y?si=0D_IDHtlX7PGVxek  - for log groups
+
+https://youtu.be/JKQgXW5quNk?si=Vb6J7zMJANSrAK1F - for metric
+
+
+create role with policy cloudwatchfullaccess
+ create ec2 instance ,  attach the created role
+
+1.sudo dnf install https://dl.fedoraproject.org/pub/epel/epel-release-latest-8.noarch.rpm
+
+2. sudo yum install collectd
+
+ - sudo systemctl enable collectd
+- sudo systemctl start collectd
+- sudo systemctl status collectd - for testing
+
+3.  wget https://amazoncloudwatch-agent.s3.amazonaws.com/redhat/amd64/latest/amazon-cloudwatch-agent.rpm
+                                                                             
+4. sudo rpm -U ./amazon-cloudwatch-agent.rpm
+
+5. sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-config-wizard
+
+after configuration do 5
+
+5. sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a fetch-config -m ec2 -c file:/opt/aws/amazon-cloudwatch-agent/bin/config.json -s
+
+6 .  sudo /opt/aws/amazon-cloudwatch-agent/bin/amazon-cloudwatch-agent-ctl -a status
+
+
+7. add user if you want , just to practice
+
+ sudo useradd jack
+sudo passwd jack
+
+now go to cloudwatch -> log group, metrics
