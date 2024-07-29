@@ -1,0 +1,918 @@
+-----------------------------------------------------------------
+#!/bin/bash
+
+echo "I am ABC and I am from Bangalore"
+
+echo "this is my number 7654321"
+-----------------------------------------------------------------------------
+
+-------------example1.sh---------------------------------------
+#!/bin/bash           
+
+
+echo "Hi this is ABC and I am from Blore"
+
+echo "below is the list of current dirs"
+ls -lrt
+
+----------------------------------------------------------------------
+
+
+how to execute shell script
+
+./example1.sh
+or
+sh example1.sh
+or
+bash example1.sh
+
+what's first line of shell script?
+#!/bin/bash  --> shebang. it invokes bash shell. if i don't write. it uses default shell.
+
+-----------------------------------------------------
+------------------------------------example2.sh---------------------------------------
+#!/bin/bash
+
+var=ABC
+var1=Blore
+var2="xyz 1234"
+
+echo "This is $var and I am from $var1"
+--------------------------------------------------------------------------------------------------
+
+-------------------------------example3.sh-----------------------------------------------
+#!/bin/bash
+
+echo "This is $1 and I am from $2"
+
+------------------------------------------------------------------------
+how do you read arguements in shell script?
+
+we can pass arguements to shell script separated by spaces 
+
+we can read them using $1 $2 $3... inside shell script
+
+$1 ---> 1st arguement 
+$2----> 2nd arguement 
+.
+.
+${10} ---> 10th agruemnt 
+.
+.
+------------------------------------------------------------------------------
+
+$# --> total number of args passed to script
+$* --> All args passed to script
+$? --> used to check status of last executed command, 0 means success and non-zero is failure
+$@ --> all args paased to script but stored in array format
+$! ---> PID of last command went into background
+$$  --> PID of current running process
+$0 --> name of the script itself 
+---------------------------------------------------------------------------------
+----------------------------------------------------------------------------------
+how do you run script in background?
+
+use & at end of script.
+
+./script1 &
+
+------------------------------------------------------------------
+
+ps -ef | grep "script name"
+
+how do you bring it back to foreground?
+
+fg PID
+
+
+difference between ./script &  and nohup ./scrpt &
+
+./script & ---> script will run in background and stops its execution once you close session or terminal
+
+
+nohup ./scrpt &
+
+nohup (no hang up)--> run script in background and will complete execution even after closing session or terminal 
+=================================================================================================================================
+simple if statement
+
+if [ condition ]
+then
+statment
+fi
+----------------------------------------
+write a script to check given number is 5 or not
+#!/bin/bash
+
+if [ $1 -eq 5 ]
+then
+        echo "$1 is five"
+fi
+--------------------------------------------------------------------------
+numeric comparison
+-eq  --> equals
+-ne --> not equal to
+-gt --> greater than
+-ge --> greater than or equal to
+-lt --> less than 
+-le  --> less than or equal to
+-----------------------------------------------------------------------------------------------------------
+
+
+if.... else....
+--------------------------------------------------------------
+if [ condition ]
+then
+statment1
+else
+statement2
+fi
+----------------------------------------
+----------------------------------------
+#!/bin/bash
+
+if [ $1 -eq 5 ]
+then
+        echo "$1 is five"
+else
+        echo "$1 is not five"
+fi
+-----------------------------------------------------------------------------------------
+
+write a script to find biggest of two numbers 
+
+write a script to find biggest of two numbers 
+#!/bin/bash
+
+if [ $1 -gt $2 ];then
+        echo "$1 is big"  # 1st arguemnt
+else
+        echo "$2 is big"
+fi
+------------------------------------------------------------------------------------------------------------
+
+restrict users to pass only two args 
+
+#!/bin/bash
+
+if [ $# -ne 2 ];then
+        echo "pass 2 args only"
+        exit 1
+fi
+
+if [ $1 -gt $2 ];then
+        echo "$1 is big"  # 1st arguemnt
+else
+        echo "$2 is big"
+fi
+-----------------------------------------------------------------------------------------------
+if [ condition ];then
+statement
+elif [ condition1 ];then
+statement
+elif [ condtion2];then
+statement
+else
+default statement
+fi
+--------------------------------------------------------
+&& --> AND
+|| ---> OR
+!  --> NOT
+----------------------------------------------------------
+write a script to find biggest of 3 numbers and also restrict users to pass only 3 args
+environment variable --> variable which can be exported to subshell
+----------------------------------------------------------------------
+how do you set env varaibles?
+-----------------------------------------------------------------------
+
+write a script to find biggest of 3 numbers and also restrict users to pass only 3 args
+
+#!/bin/bash
+
+if [ $# -ne 3 ];then
+    echo "pass 3 args"
+    exit 1
+fi
+
+if [ $1 -gt $2 ] && [ $1 -gt $3 ];then
+        echo "$1 is big"
+elif [ $2 -gt $1 ] && [  $2 -gt $3 ];then
+        echo "$2 is big"
+else
+        echo "$3 is big"
+fi
+-------------------------------------------------------------------------------------------------------------
+while loop
+
+while [ condition ]; do
+statement
+done
+--------------------------------------
+------------------------print5.sh---------------------------
+#!/bin/bash
+
+num=$1
+while [ $num -gt 0 ];do
+echo $num
+num=`expr $num - 1`
+done
+---------------------------------------------------------------
+string comparison
+
+== --> equal to
+>= --> greater than or equal to
+<= --> less than or equal to
+!= --> not equal to
+
+-------------------------------------------------
+
+Assignment : write a script to find factorial of a number 
+----------------------------------------------------------------------------------
+write a script to find factorial of a number 
+
+
+Assignment : write a script to find factorial of a number 
+----------------------------------------------------------------------------------
+write a script to find factorial of a number 
+
+#!/bin/bash
+
+num=$1
+fact=1
+
+while [ $num -gt 1 ];do
+fact=`expr $fact \* $num`
+num=`expr $num - 1`
+done
+echo "fact of $1 is $fact"
+------------------------------------------------------------
+
+special characters ---> special characters have special meaning to shell.. special characters are * $* $$ etc...
+
+escape character (\): escape special meaning to shell
+
+echo "\$?"
+echo "\$$"
+
+====================================================================================================
+
+write a script to check given name is a file or dir or link
+
+#!/bin/bash
+
+echo "enter name to check"
+read name 
+
+if [ -f $name ];then
+echo "$name is a file"
+elif [ -d $name ];then
+echo "$name is a dir"
+elif [ -L $name ];then
+echo "$name is a link"
+else
+echo "$name does not exist"
+fi
+----------------------------------------------------------------------------------------------------------
+-f  --> file
+-d --> directory
+-e --> exist or not
+-r --> read permission
+-w --> write permission
+-x --> execute permission
+how to check file empty or not
+--------------------------------------------------------------------------------
+write a script to reverse a file, 1st line should be printed as last line, 2nd line as 2nd last line and so on...
+===========================================================
+how do read file line by line??
+
+while read line
+do
+echo $line
+done < filename
+------------------------------------------------------------------
+write a script to find number of words in each line of a file
+
+#!/bin/bash
+
+number=1
+while read line
+do
+    words=`echo "$line" | wc -w` # assigining output of command to varaible
+    echo "$number : $words"
+    number=`expr $number + 1`
+done < $1
+--------------------------------------------------------------------------------------------------
+
+write  script to add line number to each line of a file
+
+#!/bin/bash
+
+line_num=1
+while read line;do
+        echo "$line_num.$line"
+        line_num=`expr $line_num + 1`
+done < $1
+
+----------------------------------------------------------------------------------------------------------
+write a script to segrate only odd lines and store in file called log_odd and even lines in a fille called log_even
+
+
+write a script to segrate only odd lines and store in file called log_odd and even lines in a fille called log_even
+
+#!/bin/bash
+
+number=1
+
+while read line;do
+         status=`expr $number % 2`
+        if [  $status -eq 0 ];then
+                echo "$line" >> log_even
+        else
+                echo "$line" >> log_odd
+        fi
+        number=`expr $number + 1`
+
+done < $1
+echo "==============odd lines============"
+cat log_odd
+echo "====================even lines============"
+cat log_even
+rm log_odd log_even
+-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+write a script to find employees if thier age is more than 50 from given data file
+
+NAME EMPID AGE
+ABCD 20005 036
+XYZA 20006 056
+AJAY 20007 034
+VIJI 20008 054
+GAAA 20009 025
+DDDD 20010 042
+---------------
+
+
+#!/bin/bash
+
+sed '1d' $1 > temp
+
+while read line;do
+      age=`echo "$line" | awk -F " " '{print $3}'`
+       if [ $age -gt 50 ];then
+          echo "$line" | awk -F " " '{print $1}'
+       fi
+
+done < temp
+
+-------------------------------------------------------------------------------------------------------------------------
+write a script to find employees if thier age is between 30 and 50
+
+write a sript to find  employees for given age
+=====================================================================================
+
+
+
+#!/bin/bash
+size=`df -h . | tail -1 | awk -F " " '{print $(NF - 1)}' | sed 's/%//g'`
+
+if [ $size -gt 90 ];then
+
+cat file | mail -s "memory reached 90%" -c "abc@gmail.com"  xyz@gmail.com
+
+fi
+
+
+--------------------------------------------------------------------------------
+
+crontab -e --> edit
+crontab -l  ---> list cron jobs
+
+day of week 
+00 --> sunday
+01 --> monday
+02 --> Tuesday
+03 --> wed
+04 --> Thur
+05 --> Fri
+06 --> Sat
+
+schedule script to run at 11.30am on 4th july
+
+30 11 04 07 01 /home/ec2-user/scripts.sh
+--------------------------------------------------------
+schedule to run at 6.15pm today
+
+15 18 04 07 01 /home/ec2-user/scripts.sh
+
+-----------------------------------------------------------
+schedule script to run at 7.30pm only on tuesday
+
+30 19 * * 02 /home/ec2-user/scripts.sh
+------------------------------------------------------------
+schedule script to run at 5.15pm every day
+15 17 * * * /home/ec2-user/scripts.sh
+----------------------------------------------------------
+schedule script to run at 4.30pm on monday and friday
+30 16 * * 01,05 /home/ec2-user/scripts.sh
+-------------------------------------------------------------
+schedule script to run at 4.30pm on monday to friday
+30 16 * * 01-05 /home/ec2-user/scripts.sh
+-----------------------------------------------------------
+schedule script to run every 30mins on wednesday
+
+*/30 * * * 03 /home/ec2-user/scripts.sh
+--------------------------------------------------------
+every 5 mins on monday 
+
+*/5 * * * 01 /home/ec2-user/scripts.sh
+---------------------------------------------------------
+every min every day
+* * * * * /home/ec2-user/scripts.sh
+----------------------------------------------------------------
+schedule script to run at 1st of every month at 11.30am
+
+30 11 01 * * /home/ec2-user/scripts.sh
+------------------------------------------------------------------
+schedule script to run last day of every month 
+----------------------------------------------------------------------------
+------------------------------------------------------------------------
+
+mail or mailx
+
+
+cat filename | mail -s "subject" -c "abc@gmail.com" xyz@gmail.com,ajay@gmail.com
+
+or
+
+mail -s "subject" -c "abc@gmail.com" xyz@gmail.com,ajay@gmail.com < filename 
+
+or 
+
+echo -e "Hi,\n body of the mail" | mail -s "subject" -c "abc@gmail.com" xyz@gmail.com,ajay@gmail.com
+==========================================================================================================================
+
+-------------------------------------------------------------------------------------------------------
+for loop
+
+for i in val1 val2 val3
+do
+statement
+done
+---------------------------------------------------------------
+-----------------------------------------add-number.sh-----------------------------------------------
+#!/bin/bash
+
+sum=0
+for i in 2 4 6 7
+do
+ sum=`expr $sum + $i`
+done
+echo "sum is $sum"
+-------------------------------------------------------------------------------------------------------
+#!/bin/bash
+var="2 5 7 9 10"
+sum=0
+for i in $var
+do
+ sum=`expr $sum + $i`
+done
+echo "sum is $sum"
+-----------------------------------------------------------------------------------------------------------
+
+write a script to add n number
+#!/bin/bash
+#var="2 5 7 9 10"
+sum=0
+for i in $*
+do
+ sum=`expr $sum + $i`
+done
+echo "sum is $sum"
+-------------------------------------------------------------------------------------------------------
+
+how do you debug shell script 
+
+set -x 
+-------------------------------------------------------------------------------------
+write a script to find factorial for given set of numbers 
+---------------------------------------------------------------------------------------------------------------
+write a script to find factorial for given set of numbers 
+
+#!/bin/bash
+
+for i in $*; do  #read one value at a time
+
+        num=$i
+        fact=1
+        while [ $num -gt 0 ];do
+                fact=`expr $fact \* $num`
+                num=`expr $num - 1`
+        done
+        echo "fact of $i is $fact"
+done
+------------------------------------------------------------------------------ 
+
+#!/bin/bash
+
+big=$1
+for i in $*
+do
+if [ $i -gt $big ];then
+       big=$i
+fi
+done
+echo "biggest of $* is $big"
+~
+-------------------------------------------------------------------------------------
+
+assignment:
+write a script to reverse string (for example if i pass "abcd". script should print "dcba")
+
+---------------------------------------------------------------------------------------------------------
+execute command or script on remote server 
+
+ssh -i key.pem user@server2 "/home/ec2-user/scripts/big2.sh 3 4"
+
+ssh -i key.pem user@server2 "ls -lrt"
+================================================================================================================
+case $var in 
+
+value1) statement1
+         ;;
+value2) statement2
+         ;;
+value3) statement3
+         ;;
+*) statement4 
+         ;;
+esac
+----------------------------------------------------------------
+#!/bin/bash
+
+case $1 in
+        1|5|7|9) echo "this is odd number"
+                ;;
+        2|4|6|8|10) echo "this is even number"
+                ;;
+        16) echo "this is  sixteen"
+                ;;
+        *) echo "Invalid number"
+                ;;
+esac
+---------------------------------------------------------------------------------
+#!/bin/bash
+
+case $1 in
+        1|5|7|9) echo "this is odd number"
+                ;;
+        2|4|6|8|10) echo "this is even number"
+                ;;
+        mon) echo "this is monday"
+                ;;
+        'tue'|'wed') echo "this is tuesday or wednesday"
+                ;;
+        *) echo "Invalid number"
+                ;;
+esac
+-----------------------------------------------------------------------------------------
+
+environment variable --> variable which can be exported to subshell
+----------------------------------------------------------------------
+how do you set env varaibles?
+========================================================================================
+
+assignments 
+write a menu based script to do followings
+
+1) monday, create a file log1 and log2
+2) Tuesday, rename files log1 to log_1 and log2 to log_2
+3) wednesday, copy file log_1 to log1_backup and log_2 to log2_backup
+4) Thursday, redirect output of l-lrt to log-list
+5) friday, delete  log1_backup and log1_backup
+6) sat and sun, holiday
+-----------------------------------------------------------------------------------------------------
+
+write script to find smallest of numbers
+write script to find 2nd smallest
+=================================================================================
+assignments 
+write a menu based script to do followings
+
+1) monday, create a file log1 and log2
+2) Tuesday, rename files log1 to log_1 and log2 to log_2
+3) wednesday, copy file log_1 to log1_backup and log_2 to log2_backup
+4) Thursday, redirect output of l-lrt to log-list
+5) friday, delete  log1_backup and log1_backup
+6) sat and sun, holiday
+-----------------------------------------------------------------------------------------------------
+
+write script to find smallest of numbers
+write script to find 2nd smallest
+--------------------------------------------------------------
+
+#!/bin/bash
+
+case $1 in
+        1|5|7|9) echo "this is odd number"
+                ;;
+        2|4|6|8|10) echo "this is even number"
+                ;;
+        16) echo "this is  sixteen"
+                ;;
+        *) echo "Invalid number"
+                ;;
+esac
+---------------------------------------------------------------------------------
+#!/bin/bash
+
+case $1 in
+        1|5|7|9) echo "this is odd number"
+                ;;
+        2|4|6|8|10) echo "this is even number"
+                ;;
+        mon) echo "this is monday"
+                ;;
+        'tue'|'wed') echo "this is tuesday or wednesday"
+                ;;
+        *) echo "Invalid number"
+                ;;
+esac
+-----------------------------------------------------------------------------------------
+
+write a menu based script to do followings
+
+1) monday, create a file log1 and log2
+2) Tuesday, rename files log1 to log_1 and log2 to log_2
+3) wednesday, copy file log_1 to log1_backup and log_2 to log2_backup
+4) Thursday, redirect output of l-lrt to log-list
+5) friday, delete  log1_backup and log1_backup
+6) sat and sun, holiday
+------------------------------------------------------------------------------------
+
+
+#!/bin/bash
+
+case $1 in 
+   'mon'|'monday') echo "creating files"
+                    touch log1 log2
+                      ;;
+   'tue'| 'tuesday') echo "rename files"
+                  mv log1 log_1 
+                  mv log2 log_2
+                      ;;
+   'wed'|'wednesday') echo "take backup of files"
+                   mv log_1 log1-backup
+                   mv log_2 log2-backup
+                     ;;
+    'thu'|'thursday') echo "redirect list files to file "
+                    ls -lrt > log-list
+                      ;;
+    'fri'|'friday') echo "remove files"
+                    rm log1-backup log2-backup
+                     ;;
+     *) echo "today is holiday"
+                  ;;
+esac
+-----------------------------------------------------------------------------------------------------
+Write a script to calculator
+#!/bin/bash
+
+echo "Below is the  Calculator Menu "
+echo -e "1) Addition\n2) Substraction\n3) Multiplication\n4) Division\n5) Exit\n"
+echo "Select any option from Above menu"
+read opt
+
+case $opt in
+        1) echo "enter numbers to add"
+                read numbers
+                sum=0
+                for i in $numbers
+                 do
+                         sum=`expr $sum + $i`
+                 done
+                 echo "sum of $numbers is $sum"
+                 ;;
+         2) echo "enter numbers to subsratct"
+                 echo "enter 1st number"
+                 read num1
+                 echo "enter 2nd number"
+                 read num2
+
+                 if [ $num1 -gt $num2 ];then
+
+                         sub=`expr $num1 - $num2`
+                 else
+                         sub=`expr $num2 - $num1`
+                 fi
+                 echo "sub of $num1 and $num2 is $sub"
+                 ;;
+          3) echo "enter numbers to multiple "
+                 read numbers
+                 mul=1
+                 for i in $numbers
+                 do
+                  mul=`expr $mul \* $i`
+                 done
+                echo "multiplication of $numbers is $mul"
+                ;;
+        4) echo "enter numbers to Division"
+                 echo "enter 1st number"
+                 read num1
+                 echo "enter 2nd number"
+                 read num2
+
+                 if [ $num1 -gt $num2 ];then
+
+                         sub=`expr $num1 / $num2`
+                 else
+                         sub=`expr $num2 / $num1`
+                 fi
+                 echo "Division  of $num1 and $num2 is $sub"
+                 ;;
+
+         *) echo "invalid option. Exit from the script"
+                 ;;
+
+ esac
+==========================================================================================================================
+Assignment:  modify script to display menu option again until you choose exit option explicitly
+-------------------------------------------------------------------------------------------------------------------
+#!/bin/bash
+
+case $1 in
+        1|3|5|7) echo "this is odd number"
+                ;;
+        2|4|6|8) echo "this is even number"
+                ;;
+        'list') echo "thisis list of all files and dirs"
+                ls -lrt
+                ;;
+        `expr 2 + 11`) echo "present working dir"
+               pwd
+                ;;
+        *) echo "this invalid"
+                ;;
+esac
+===========================================================================================================================
+
+menu based script
+
+#!/bin/bash
+=====================================================================================
+echo "below is the menu"
+echo -e "1) Searchword\n2) Checkname\n3) Findfile\n4) CreatLink\n5) Edit file\n6) Exit From the Script"
+echo " Enter any option from the above menu"
+read opt
+
+case $opt in
+        1)/home/ec2-user/shellscript/searchword.sh # calling other scripts
+                ;;
+        2)/home/ec2-user/shellscript/checkname.sh
+                ;;
+        3) /home/ec2-user/shellscript/findfile.sh
+                ;;
+        4)/home/ec2-user/shellscript/createlink.sh
+                ;;
+        5)/home/ec2-user/shellscript/editfile.sh
+                ;;
+        *) echo "Exit from the script"
+                exit 0
+                ;;
+  esac
+==========================================================================================================================
+
+---------------------------------------------searchword.sh------------------------------------------------------
+#!/bin/bash
+
+
+echo "enter word to search"
+                read word
+                grep -l -R "$word" * > file_list
+                  if [ $? -eq 0 ];then
+                          echo "$word is found in below files"
+                          cat file_list
+                  else
+                          echo "$word is not found in any file"
+                  fi
+                  rm file_list
+---------------------------------------------------------------------------------------------------
+------------------------------------------------checkname.sh----------------------------------------------------
+#!/bin/bash
+
+echo "enter name to check"
+read name
+echo "$name entered from keyboard"
+
+if [ -f $name ];then
+        echo "$name is a file"
+elif [ -d $name ];then
+        echo "$name is a dir"
+elif [ -L $name ];then
+        echo "$name is link"
+else
+        echo "$name does not exist"
+fi
+--------------------------------------------------------------------------------------------
+------------------------------------------------findfile--------------------------------------------------------
+#!/bin/bash
+
+echo "enter file name to find its location"
+read file
+find /home/ec2-user -iname "$file" > file_loc
+
+if [ -s file_loc ];then
+        echo "$file is found in below location"
+        cat file_loc
+else
+        echo "$file is not found anywhere"
+fi
+rm file_loc
+
+-----------------------------------------------------------------------------------------
+-----------------------------------------------------createlink----------------------------------------------------------
+#!/bin/bash
+
+echo "Enter filename to create link"
+read file
+if [ ! -f $file ];then
+        echo "Softlink can not be created because $file does not exist"
+        exit 1
+fi
+
+echo "Enter link name"
+read link
+if [ -L $link ];then
+        echo "Softlink can not be created because $link already exists"
+       exit 1
+fi
+
+ln -s $file $link
+if [ $? -eq 0 ];then
+        echo "Softlink $link created for the file $file successfully"
+else
+        echo "Link $link not created"
+fi
+----------------------------------------------------------------------------------------------------------------
+--------------------------------------------------------editfile ----------------------------------------------------
+#!/bin/bash
+
+echo "enter file name to edit"
+read file
+if [ -f $file ];then
+        vim $file
+else
+        echo "$file does not exist"
+fi
+---------------------------------------------------------------------------------------------------------------------
+
+
+
+explain in interview 
+written script to monitor process. if process is stopped, it should email notification saying "process stopped. pls take appropriate action"
+
+#!/bin/bash
+
+service="service1 service2 service3"
+
+for i in $service
+do
+
+    ps -ef | grep "$i"
+
+    if [ $? -ne 0 ];then
+        echo "pls take approriate action" |mail -s "$i stopped" abc@gmail.com
+    fi
+done
+
+schedule this sctipt in crotab
+* * * * * /home/ec2-user/script.sh
+
+=========================================================================================
+functions 
+
+#!/bin/bash
+
+function factorial {
+num=$1
+fact=1
+   while [ $num -gt 0 ]
+   do
+      fact=`expr $fact \* $num`
+      num=`expr $num - 1`
+   done
+   echo "factorial of $i is $fact"
+
+}
+
+
+for i in $*
+do
+        factorial $i  #calling function
+done
+
+==========================================================================================
+
+
+
