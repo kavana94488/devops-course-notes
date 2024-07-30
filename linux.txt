@@ -247,6 +247,9 @@ grep -R -l "linux" *
 how do you prnt lines which don't have specified pattern
 grep -v "linux" test_1
 
+to not to dispaly empty line
+grep -v "^$" filename
+
 list lines if starts with particular pattern
 
 grep "^pattern" filename
