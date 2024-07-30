@@ -1,3 +1,10 @@
+To install netstat
+-----------------------
+
+sudo yum install net-tools
+
+---------------------------------
+
 ls ---> used to list files and dirs
 
 ls -l  --> list files and dirs with long format
