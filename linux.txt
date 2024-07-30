@@ -5,6 +5,14 @@ sudo yum install net-tools
 
 ---------------------------------
 
+To list the open port
+
+sudo netstat -tulnp | grep LISTEN
+
+grep is not mandatory
+
+------------------------
+
 ls ---> used to list files and dirs
 
 ls -l  --> list files and dirs with long format
