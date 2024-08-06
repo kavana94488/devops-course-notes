@@ -1,0 +1,41 @@
+- name: First playbook
+  hosts: webserver
+  become: yes
+  vars:
+    test: httpd
+  vars_prompt:
+    name: anything
+    prompt: enter the service status
+    private : no
+  tasks:
+    - name: Install Apache on Debian-based systems
+      apt:
+        name: apache2
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Install Apache on RedHat-based systems
+      yum:
+        name: '{{test}}'
+        state: '{{anything}}'
+      when: ansible_os_family == 'RedHat'
+      register: outputVar
+    - name: checking output/Debug
+      debug:
+        msg: '{{outputVar}}'
+
+    - name: Configure Apache
+      copy:
+        src: 1.yaml
+        dest: /opt
+      notify:
+        - Restart Apache
+
+  handlers:
+    - name: Restart Apache
+      service:
+        name: httpd
+        state: restarted
+
+~
+~

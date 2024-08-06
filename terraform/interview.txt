@@ -1,0 +1,9 @@
+1. what benefit we get by using terraform .
+  -- it is a infraprovisioning tool . which help us to automate the creation and destruction
+
+  we can create resource in any cloud .
+  we can write a script to create a resource/destroy . 
+
+2. difference between local and variables
+3. count meta arguements
+4. create_before_provider , prevent_before_destroy

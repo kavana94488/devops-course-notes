@@ -1,0 +1,44 @@
+sudo yum install ansible
+
+after installing 
+-------------------------------
+sudo su -
+vi /etc/ansible/hosts
+
+in hosts , make configuration like
+[webserver]
+private ip address
+[dbserver]
+private ip address
+-----------------------------------------
+to check , ansible all -m ping (adhoc)
+
+---------------------------------------------
+they are two ways to do configuration
+1. adhoc
+2. playbook
+
+ansible webserver -m yum -a "name=apache state=present"  ---adhoc
+
+
+In playbook we can write multiple task
+-------------------------------
+to gather facts , 
+-> ansible webserver -m setup 
+module is used
+
+
+--------------------------------
+
+gather facts is the first task gets executed
+
+-------------------------------------------------
+
+1.ansible-vault encrypt filename - to encrypt
+
+after encryption , we have to decrypt the file to execute
+
+2.ansible-vault decrypt filename
+
+3. ansible-playbook filename --ask-vault-pass  ---> it will ask password the encrypt as well as execute the file
+
