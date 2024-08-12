@@ -381,6 +381,22 @@ done < temp
 -------------------------------------------------------------------------------------------------------------------------
 write a script to find employees if thier age is between 30 and 50
 
+
+#!/bin/bash
+
+sed '1d' $1 > temp
+
+while read line
+do
+age=`echo "$line" | awk -F " " '{print $3}'`
+if [ $age -gt 30 ] && [ $age -lt 50 ]
+then
+echo "$line" | awk -F " " '{print $1}'
+fi
+done < temp
+
+----------------------------------------------------------------------------------------------------------------------
+
 write a sript to find  employees for given age
 =====================================================================================
 
@@ -542,6 +558,13 @@ echo "biggest of $* is $big"
 assignment:
 write a script to reverse string (for example if i pass "abcd". script should print "dcba")
 
+#!/bin/bash
+
+string=$1
+
+echo "$string " | rev
+
+
 ---------------------------------------------------------------------------------------------------------
 execute command or script on remote server 
 
@@ -606,8 +629,42 @@ write a menu based script to do followings
 6) sat and sun, holiday
 -----------------------------------------------------------------------------------------------------
 
-write script to find smallest of numbers
+write script to find smallest of number
+
+#!/bin/bash
+
+num=$@
+smallest=$1
+
+for i in $num
+do
+if [ $i -lt $smallest ]
+then
+smallest=$i
+fi
+done
+
+echo "smallest is $smallest"
+
+--------------------------------------------------
 write script to find 2nd smallest
+
+#!/bin/bash
+
+small=$1
+second_smallest=$2
+
+for i in $@; do
+    if [ $i -lt $small ]; then
+        second_smallest=$small
+        small=$i
+    elif [ $i -lt $second_smallest ] && [ $i -ne $small ]; then
+        second_smallest=$i
+    fi
+done
+
+echo "$second_smallest"
+
 =================================================================================
 assignments 
 write a menu based script to do followings
