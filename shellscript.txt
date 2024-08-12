@@ -283,6 +283,13 @@ fi
 how to check file empty or not
 --------------------------------------------------------------------------------
 write a script to reverse a file, 1st line should be printed as last line, 2nd line as 2nd last line and so on...
+
+#!/bin/bash
+
+if [ -f $1 ]; then
+tac $1
+fi
+
 ===========================================================
 how do read file line by line??
 
