@@ -218,3 +218,52 @@ when we clone central repo to workspace. it becomes local repo automatically
 git init
 
 -----------------------------------------------------------------------------------------------------------------------------------
+
+
+What is Git?
+
+Answer: Git is a distributed version control system used for tracking changes in source code during software development. It allows multiple developers to work on a project simultaneously and provides tools for branching, merging, and version tracking.
+What is the difference between git fetch and git pull?
+
+Answer: git fetch retrieves updates from a remote repository but does not merge them into your working branch. git pull performs a fetch followed by a merge to integrate the fetched changes into your current branch.
+What is the purpose of a .gitignore file?
+
+Answer: The .gitignore file specifies which files and directories should be ignored by Git. It is used to prevent unnecessary files, such as build artifacts or sensitive information, from being tracked by version control.
+What is a Git commit?
+
+Answer: A Git commit is a snapshot of your changes at a particular point in time. It represents a logical unit of work and includes metadata such as the author, date, and a commit message.
+What is a branch in Git?
+
+Answer: A branch in Git is a separate line of development that allows you to work on different features or fixes concurrently. Each branch has its own history and can be merged back into other branches.
+Intermediate Questions
+What is the difference between git merge and git rebase?
+
+Answer: git merge combines changes from one branch into another, preserving the history of both branches, while git rebase reapplies commits from one branch onto another base branch, resulting in a linear history without merge commits.
+How do you revert a commit in Git?
+
+Answer: To revert a commit, use git revert <commit-id>. This creates a new commit that undoes the changes introduced by the specified commit.
+What is a detached HEAD state?
+
+Answer: A detached HEAD state occurs when you check out a commit that is not at the tip of a branch. In this state, any new commits you make are not associated with any branch and can be lost if you switch branches without creating a new branch.
+How do you resolve a merge conflict in Git?
+
+Answer: To resolve a merge conflict, manually edit the conflicting files to resolve the discrepancies, then add the resolved files to the staging area with git add <file>. Finally, complete the merge with git commit or git merge --continue.
+What is the difference between git stash and git commit?
+
+Answer: git stash temporarily saves changes in your working directory and index, allowing you to work on something else. git commit permanently saves changes to the repository’s history with a commit message.
+Advanced Questions
+What is Git cherry-pick?
+
+Answer: git cherry-pick allows you to apply the changes introduced by a specific commit from one branch to another. It’s useful for applying individual commits from a branch without merging the entire branch.
+Explain the difference between git reset and git revert.
+
+Answer: git reset changes the commit history and working directory, allowing you to undo commits or unstage changes. git revert creates a new commit that undoes the changes of a previous commit without altering history.
+How do you rewrite commit history in Git?
+
+Answer: To rewrite commit history, you can use commands like git rebase -i (interactive rebase) for modifying, squashing, or reordering commits, or git filter-branch for more extensive changes.
+What is a Git hook, and how can you use it?
+
+Answer: Git hooks are scripts that run automatically in response to specific events in the Git workflow (e.g., pre-commit, post-commit). They can be used to enforce coding standards, run tests, or automate workflows.
+How do you handle large files in Git?
+
+Answer: To handle large files, use Git Large File Storage (LFS). Git LFS replaces large files in the repository with lightweight pointers and stores the actual file content on a remote server.
