@@ -184,6 +184,11 @@ write a script to find biggest of 3 numbers and also restrict users to pass only
 environment variable --> variable which can be exported to subshell
 ----------------------------------------------------------------------
 how do you set env varaibles?
+
+echo "export fact=1" >> ~/.bashrc
+source ~/.bashrc
+
+then echo "$fact"
 -----------------------------------------------------------------------
 
 write a script to find biggest of 3 numbers and also restrict users to pass only 3 args
