@@ -1,0 +1,90 @@
+1. docker images -- to list the images
+
+2. docker ps   - list running container
+
+  docker ps -a -> list running and stopped container
+
+3. docker build -t <name>:<version> <path> -- to build image
+
+4 docker run -d --name <containername> -p <hostPost>:<containerPort> <imageName:withVersion>  --> to run container
+
+5. docker logs <containername> -- to check the logs 
+
+6. docker exec -it <containername> bash --> to go inside the container and bash 
+
+docker exec -- to go inside the container
+
+7. docker status --> resource utilization of the container
+
+8. docker start <containername/containerId> -> to start the container
+
+9. To remove the image , first we have remove container . To remove container , first we have to stop the container
+
+docker stop <containername/containerId>
+
+docker rm <containername/containerId>
+
+then , docker rmi <imageName>
+
+-------------------------------
+
+docker hub
+
+1. docker login -> provide username & password
+
+2. docker tag <imageName:version> <username>/<imageName:version>
+
+3. docker push <username>/<imageName:version>
+
+-----------------------------
+to create private container
+
+1. docker -run -d --name <anyname> -p 5000:5000 registry:2
+
+2. curl localhost:5000/v2/_catalog
+
+3. docker tag <imagename>:<version> localhost:5000/<imagename>:<version>
+
+4.docker push localhost:5000/<imagename>:<version>
+
+5. curl localhost:5000/v2/_catalog
+
+-------------------------------------
+
+to create volume for public container
+
+1. docker run -d --name <anyname:version> -v /opt:/etc/foo -p 8000:8080 kavana97/first:1.0
+
+ for private 
+
+1. docker -run -d --name <anyname> -p 5000:5000  -v /opt:/var/lib/registry/ registry:2
+
+--------------------------
+
+to create volume
+
+1. docker volume create <volumeName>
+
+2. docker volume ls --> to list the volume
+
+3. to mount the container for common volume 
+docker run -d --name <anyname:version> -v <volumeName>:/etc/foo -p 8000:8080 kavana97/first:1.0
+
+that will be in /var/lib/docker/volumes
+
+
+--------------------------------------
+
+3 types of network
+
+1 . bridge (default)
+2.host
+3 .null
+
+ docker network ls --> list the network
+
+docker network inspect bridge -> to inspect
+
+docker network create <network name> -> to create network
+
+docker network connect bridge <container name which wants to communcate>

@@ -1,0 +1,31 @@
+
+- name: template test
+  hosts: webserver
+  vars_prompt:
+    - name: myname
+      prompt: enter your name
+      private: no
+  vars:
+    seq:
+     - IBM
+     - TCS
+     - ABC
+  tasks:
+    - name: install apache
+      yum:
+        name: httpd
+        state: present
+    - name: Templatefile
+      template:
+        src: index.html
+        dest: /var/www/html
+    - name: Restart apache
+      service:
+        name: httpd
+        state: restarted
+
+
+
+
+# ------------------
+# check index.html
