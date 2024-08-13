@@ -37,7 +37,7 @@ docker hub
 3. docker push <username>/<imageName:version>
 
 -----------------------------
-to create private container
+to create private registry
 
 1. docker -run -d --name <anyname> -p 5000:5000 registry:2
 
