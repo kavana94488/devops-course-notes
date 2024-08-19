@@ -1,0 +1,174 @@
+node is an object of kubernetes
+k api-resources - returns all the k8 objects 
+
+namesapce
+-------------------
+
+1.default               
+2.kube-node-lease       
+3.kube-public           
+4.kube-system           
+5.local-path-storage   
+
+-----------------------
+
+1.kubectl crerate ns  <namespace_name> --> to crreate namesapce
+
+2.kubectl get po -n <namespace_name> - to access the resources under namespace. If -n & namepsace
+is not specified , it will return from default
+
+
+
+3.cluster components are created in kube system
+master related components are stored in kube system
+
+kubectl get po -n kube-system -> returns all the pod from kubesystem
+
+kube proxy provides network for nodes
+------------------------------------------------
+In deployment
+
+IN replicaset controller is created , under that POD is created 
+ways to create Pod
+1. imperative
+2. yaml
+
+-------------------
+autoscaling
+
+kubneretes supports only cpu utilization 
+
+we create HPA (horizontal pod autoscaling )
+
+
+
+
+kind create cluster --config config
+  311  docker images
+  312  kubectl get nodes
+  313  docker ps
+  317  kubectl api-resources
+  318  alias k=kubectl
+  319 
+  320  k api-resources
+  321  k get ns
+  322  k get -n po
+  323  k get  po
+  324  k create ns myns
+  325  k get nodes
+  326  k get node
+  327  clear
+  328  k get ns
+  329  k get -n myns
+  330  k get po
+  331  k get -n myns po
+  332  k get po -n myns
+  333  k get po 
+  335  k get po -n kube-system
+  337  k get po -n kube-system -o wide
+  339  k run firstpod --image=kavana97/first:1.0 --port=8080
+  340  k get pod
+  341  k get po -o wide
+  342  k get node
+  343  k describe firstpod
+  344  k describe po firstpod
+  345  k logs firstpod
+  347  k get po
+  348  k exec -it firstpod bash
+  349  kubectl exec -it firstpod bash
+  350  kubectl exec -it firstpod -- bash
+  351  k exec -it firstpod -- bash
+  353  k delete po firstpod
+  354  k get pod
+  355 
+  356  docker ps
+  -----------------------
+to create deployment
+
+  k create deploy <mydeploy> --image=kavana97/first:1.0 --port=8080 --dry-run=client -o yaml > delpoy.yaml
+  k apply -f mydeploy.yaml
+
+  k get deploy mydeploy
+  k get po
+  k get rs  > rs > replica set
+  -------------------------
+
+  to create pod 
+
+  k run <firstpod>  --image=kavana97/first:1.0 --port=8080 --dry-run=client -o yaml > pod.yaml
+  k apply -f pod.yaml
+
+  -----------------------------
+  to edit replica set 
+
+  3 ways
+
+  1. vi deploy.yaml
+  2. k scale deploy <mydeploy> --replicas=10
+  3.l edit deploy <mydeploy> -- this will edit in live object
+
+  autoscale --> horizontal pod autoscale -> hpa
+
+k autoscale deploy <mydeploy> --min=2 --max=10 --cpu-percent=70
+
+k rollout status deploy <mydeploy>
+k rollout history deploy <mydeploy> --> how time particular version got updated
+
+k set image deploy <downtime> nginx=nginx:1.8.1 --record-- to update
+
+k rollout undo deploy <mydeeploy> -> to previous
+
+k rollout undo deploy <mydeploy> --to-revision=2
+
+------------------------
+
+on k8 , there is no guarantee application will node on particular node . sO IT is difficult to change the pod . We have to bind by service object
+
+Service
+--------
+2. types
+1. Node port -> to access outside the cluster
+2. Cluster ip -> inside the cluster
+---------------------------------
+
+k run nginx --image=nginx -port=80
+
+k expose po nginx --name <myservice> type=NodePort --port=80 --target-port=80  --to expose
+------------------------------------------------------------------------------
+
+Scheduling
+
+Lets say application running on port has to have ssd memory , in that case app will run on pod having ssd memory in very low of chance.
+
+k get no --show-labels -> to see the labels
+
+k label no <node-name for example kind-worker> hdd=ssd -> assigning the label
+
+k label no <kind-worker> hdd-   --> to remove the label
+
+In Scheduling
+1. Node selector --> schedule the pod if checks (labels) are matching
+2. Node affinity -> hard & soft
+
+In hard -> schedule the pod if checks (labels) are matching
+in soft -> don't schedule the if key and value is available . else schedule it if any other pod is not available
+-------------
+
+Taint and tolerance
+
+Taint -> on node
+tolerance -> on pod
+
+effect
+1. Noschedule -> if taint is not matching tolerance, then don't schedule pod  on node,lets say taint is applying now, existing node will run
+2. Preferschedule -> if taint is not matching tolerance for a pod try not to schedule the node. but if any other node is available then you schedule, existing will run
+3. Noexecute -> if taint is not matching tolerance, then don't schedule pod  on node,lets say taint is applying now, existing node will get removed
+
+none of the pod is created in master node. bcz by default master node has taint
+
+k taint no kind-worker hdd=ssd: Noschedule
+
+<hdd=ssd: Noschedule > === <key=value:effect>
+
+ k cordon kind-worker2 - it is used to disable the schedule
+ 
