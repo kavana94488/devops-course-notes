@@ -1,0 +1,154 @@
+1. What is Kubernetes?
+Answer: Kubernetes, often abbreviated as K8s, is an open-source container orchestration platform. It automates the deployment, scaling, and management of containerized applications. Originally developed by Google, it is now maintained by the Cloud Native Computing Foundation (CNCF).
+
+2. What are the main components of Kubernetes architecture?
+Answer:
+
+Master Node:
+API Server: Exposes the Kubernetes API.
+Scheduler: Schedules the pods to nodes.
+Controller Manager: Manages different controllers (like Node Controller, Replication Controller).
+etcd: A distributed key-value store for configuration data.
+Worker Node:
+Kubelet: Manages the pods on the node.
+Kube-proxy: Manages network proxying and load balancing for services.
+Container Runtime: Runs the containers (e.g., containerd, Docker).
+
+3. What is a Pod in Kubernetes?
+Answer: A Pod is the smallest and simplest Kubernetes object. It represents a single instance of a running process in your cluster. A Pod can contain one or more containers that share the same network namespace and storage. Containers within a Pod can communicate with each other using localhost and share data through shared volumes.
+
+4. What is a ReplicaSet?
+Answer: A ReplicaSet is a Kubernetes object that ensures a specified number of pod replicas are running at any given time. If a pod fails, the ReplicaSet creates a new one to maintain the desired state. However, it's typically used indirectly through a Deployment.
+
+5. What is a Deployment in Kubernetes?
+Answer: A Deployment provides declarative updates to applications. It manages ReplicaSets and provides features such as rolling updates and rollbacks, making it easier to manage the lifecycle of applications running on Kubernetes.
+
+6. What are Namespaces in Kubernetes?
+Answer: Namespaces are a way to divide cluster resources between multiple users. They provide a scope for names and allow multiple teams to share a Kubernetes cluster without interfering with each other. Resources in one namespace are isolated from resources in other namespaces.
+
+7. How does Kubernetes perform load balancing?
+Answer: Kubernetes uses Services to provide load balancing. A Service defines a logical set of Pods and a policy by which to access them. Kubernetes can automatically distribute traffic across the Pods in a Service, ensuring balanced load distribution.
+
+8. What is a ConfigMap in Kubernetes?
+Answer: A ConfigMap is an API object used to store non-confidential data in key-value pairs. Pods can consume ConfigMaps as environment variables, command-line arguments, or configuration files. This allows you to decouple configuration data from application code.
+
+9. What is a PersistentVolume (PV) and PersistentVolumeClaim (PVC)?
+Answer:
+
+PersistentVolume (PV): A storage resource in Kubernetes that is provisioned by an administrator or dynamically through Storage Classes.
+PersistentVolumeClaim (PVC): A request for storage by a user. It is used to claim a PV and mount it to a Pod, enabling persistent storage for containers.
+10. What is the difference between a StatefulSet and a Deployment?
+Answer:
+
+Deployment: Manages stateless applications. Pods are interchangeable and do not maintain any specific identity.
+StatefulSet: Manages stateful applications where each Pod is unique and has a persistent identity. It's used for applications that require stable, unique network identifiers or persistent storage.
+11. What are DaemonSets?
+Answer: A DaemonSet ensures that all (or some) nodes run a copy of a specific Pod. When new nodes are added to the cluster, the DaemonSet automatically adds the pod to them. It is typically used for logging, monitoring, or network applications that need to run on all nodes.
+
+12. What is a Service Mesh?
+Answer: A Service Mesh is a dedicated infrastructure layer that controls communication between microservices. It typically provides features such as load balancing, service discovery, encryption, observability, and failure recovery. Istio is a popular example of a Service Mesh in Kubernetes.
+
+13. What is the role of kubectl in Kubernetes?
+Answer: kubectl is a command-line tool used to interact with Kubernetes clusters. It allows you to deploy and manage applications, inspect and manage cluster resources, and view logs. It communicates with the Kubernetes API server to execute commands.
+
+14. How does Kubernetes handle secret management?
+Answer: Kubernetes provides a built-in Secret object to manage sensitive data such as passwords, OAuth tokens, and SSH keys. Secrets are base64 encoded and can be mounted as volumes or exposed as environment variables in Pods.
+
+15. What is a Horizontal Pod Autoscaler (HPA)?
+Answer: HPA automatically scales the number of pods in a deployment, replication controller, or stateful set based on observed CPU utilization (or other select metrics). It is used to ensure that applications can scale up or down based on demand.
+
+
+
+
+
+-------------------------------------------------------------
+
+1. Scenario: You have a Kubernetes Deployment running a web application with 10 replicas. The application suddenly experiences a surge in traffic, and users are reporting slow response times. How would you handle this situation?
+Answer:
+
+Step 1: Investigate the issue by checking the current resource utilization of the Pods using kubectl top pods. If the Pods are under heavy load, consider scaling the Deployment.
+Step 2: Use kubectl scale to manually increase the number of replicas, e.g., kubectl scale deployment web-app --replicas=20.
+Step 3: Alternatively, configure a Horizontal Pod Autoscaler (HPA) if not already set up, which can automatically adjust the number of replicas based on CPU/memory utilization, e.g., kubectl autoscale deployment web-app --min=10 --max=50 --cpu-percent=80.
+Step 4: Monitor the application’s performance and adjust the scaling policy if necessary.
+
+------------------------------------------------------------------------------
+2. Scenario: A team member accidentally deletes a critical Kubernetes Namespace that contains multiple Deployments and Services. How would you recover from this situation?
+Answer:
+
+Step 1: First, assess the damage by confirming the deletion using kubectl get namespaces. If the namespace is truly deleted, all associated resources are gone.
+Step 2: Check if you have a backup of the cluster state or the specific namespace. If backups exist, restore the namespace and its resources from the backup.
+Step 3: If no backup is available, recreate the namespace using kubectl create namespace <namespace-name>.
+Step 4: Reapply the manifest files (YAML files) for the Deployments, Services, and other resources from source control or local files.
+Step 5: Verify that all resources are restored correctly and that the application is functioning as expected.
+
+
+--------------------------------------------------------------------------------------------
+3. Scenario: You have a StatefulSet running a database that requires persistent storage. One of the nodes in the cluster fails, and the pod running on that node is not coming back up on another node. What could be the problem, and how would you resolve it?
+Answer:
+
+Step 1: Investigate the issue by checking the StatefulSet and the Pod status using kubectl describe statefulset <statefulset-name> and kubectl describe pod <pod-name>.
+Step 2: Check if the PersistentVolume (PV) is bound to the PersistentVolumeClaim (PVC) and if the volume is still attached to the failed node. If the volume is stuck in a terminating state, it might be preventing the Pod from being scheduled on another node.
+Step 3: Manually detach the volume from the failed node, or delete the PV and PVC if necessary, and recreate them to ensure the volume can be reattached to a new node.
+Step 4: If the Pod still doesn’t come up, ensure that the storage class is correctly configured and that the node selector allows the Pod to be scheduled on a healthy node.
+Step 5: Verify that the database Pod is restored and that the data is intact.
+
+------------------------------------------------------------------------------------------------------
+4. Scenario: Your Kubernetes cluster’s API server is experiencing high latency, and API requests are taking a long time to process. What steps would you take to diagnose and mitigate the issue?
+Answer:
+
+Step 1: Start by checking the health and performance of the API server using metrics like CPU, memory, and network utilization with kubectl top nodes or by checking logs using kubectl logs <api-server-pod>.
+Step 2: Investigate if there is a surge in API requests or if specific requests are taking too long by inspecting the API server’s logs.
+Step 3: Look for any misconfigured or abusive clients generating excessive requests (e.g., badly configured controllers, misbehaving custom controllers, etc.).
+Step 4: Consider increasing the API server’s resource limits or adding more API server instances if you’re running a Highly Available (HA) setup.
+Step 5: If the etcd database is the bottleneck, optimize it by checking its health and performance, and consider increasing its resource allocation or tuning its configuration.
+Step 6: Apply any necessary changes, such as rate-limiting requests from abusive clients, and monitor the system to ensure the latency improves.
+
+-------------------------------------------------------------------------------------
+5. Scenario: A rolling update on a Deployment fails, causing the application to be unavailable. How do you handle this situation?
+Answer:
+
+Step 1: Immediately pause the rolling update using kubectl rollout pause deployment <deployment-name> to stop further updates.
+Step 2: Identify the cause of the failure by inspecting the logs of the newly created Pods using kubectl logs <pod-name>.
+Step 3: If the issue is identified (e.g., a misconfiguration or a code bug), fix the issue in the application or manifest files.
+Step 4: Roll back to the previous stable version using kubectl rollout undo deployment <deployment-name> to restore application availability.
+Step 5: Test the changes in a staging environment before reattempting the deployment in production.
+Step 6: Resume the rollout with kubectl rollout resume deployment <deployment-name> once the issue is resolved.
+
+------------------------------------------------------------------------------------------
+6. Scenario: You’ve deployed a microservices-based application on Kubernetes, and one of the services is intermittently failing. How would you troubleshoot and ensure the service’s stability?
+Answer:
+
+Step 1: Begin by reviewing the logs of the failing service using kubectl logs and checking if there are any error messages or stack traces.
+Step 2: Check the health of the Pods running the service using kubectl describe pod <pod-name> to see if there are any OOM (Out of Memory) or CPU throttling issues.
+Step 3: Investigate if there are any networking issues causing intermittent failures, such as DNS resolution problems, by testing the connectivity between Pods.
+Step 4: Review the liveness and readiness probes defined for the service. Ensure they are correctly configured to prevent Kubernetes from terminating healthy Pods or routing traffic to unready ones.
+Step 5: If resource constraints are the issue, consider scaling the service vertically (by increasing CPU/memory limits) or horizontally (by adding more replicas).
+Step 6: Monitor the service’s performance and stability after applying fixes, using tools like Prometheus and Grafana for ongoing observability.
+
+------------------------------------------------------------------
+7. Scenario: You need to migrate a Kubernetes cluster from one cloud provider to another. What is your migration strategy?
+Answer:
+
+Step 1: Plan the migration by documenting the current cluster setup, including all resources, configurations, and dependencies.
+Step 2: Set up a new Kubernetes cluster on the target cloud provider, ensuring it matches the specifications and configurations of the source cluster.
+Step 3: Export the resource definitions (Deployments, Services, ConfigMaps, Secrets, etc.) from the source cluster using kubectl get <resource-type> -o yaml --export.
+Step 4: Apply the exported resource definitions to the new cluster using kubectl apply -f <resource-file>.
+Step 5: Migrate persistent data (e.g., PersistentVolumes) by copying data from the old storage solution to the new one, ensuring data integrity and consistency.
+Step 6: Test the new cluster to ensure all applications are functioning correctly.
+Step 7: Update DNS records or load balancers to point to the new cluster.
+Step 8: Decommission the old cluster once the migration is verified and stable.
+-----------------------------------------------------------------------------------
+
+8. Scenario: A Pod is in a CrashLoopBackOff state. What steps would you take to diagnose and resolve this issue?
+Answer:
+
+Step 1: Check the Pod’s logs using kubectl logs <pod-name> to identify the reason for the crashes.
+Step 2: Use kubectl describe pod <pod-name> to get more detailed information, including recent events, container statuses, and any error messages.
+Step 3: Investigate common causes like:
+Misconfigured environment variables or command-line arguments.
+Missing dependencies or services that the Pod relies on.
+Resource constraints (e.g., insufficient memory leading to OOM kills).
+Step 4: Depending on the root cause, fix the issue, such as updating the Pod’s configuration, increasing resource limits, or ensuring dependencies are available.
+Step 5: Restart the Pod or Deployment using kubectl delete pod <pod-name> to trigger a fresh start.
+Step 6: Monitor the Pod to confirm that the issue is resolved and it no longer enters a CrashLoopBackOff state.
+These scenario-based questions are designed to assess not just your Kubernetes knowledge but also your problem-solving abilities in real-world situations.

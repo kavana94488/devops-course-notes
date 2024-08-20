@@ -114,7 +114,7 @@ k autoscale deploy <mydeploy> --min=2 --max=10 --cpu-percent=70
 k rollout status deploy <mydeploy>
 k rollout history deploy <mydeploy> --> how time particular version got updated
 
-k set image deploy <downtime> nginx=nginx:1.8.1 --record-- to update
+k set image deploy <downtime> nginx=nginx:1.8.1 --record  -- to update
 
 k rollout undo deploy <mydeeploy> -> to previous
 
@@ -171,4 +171,40 @@ k taint no kind-worker hdd=ssd: Noschedule
 <hdd=ssd: Noschedule > === <key=value:effect>
 
  k cordon kind-worker2 - it is used to disable the schedule
+
+ ------------------------------
+ Daemonset
+
+ 1.It will create pod in each node . 
+ 2.if node has taint , then it has to have the tolerance for pod , then only it eill get crreated on tainted node
+
+ In deployment , there is no guarantee that pod will get created in each node
+
  
+ ----------------------------
+
+ Job and cronjob
+
+ watch kubectl get all -> to watches
+ /bin/sh -c "sleep 10" -> to pass command
+
+
+ If we want to have the backup of an application, 
+
+ in case of deploy , it will create the pod again if we stop also
+
+ in case of job , once the job is completed , pod will be in completed stage . If the pod get stopped in between of any job , then pod will get created
+
+ k create job <myjobname> --image=ubuntu:22.04 --dry-run=client -o yaml -- /bin/sh -c "sleep 10" >job.yaml -> to create job
+ k apply -f job.yaml
+
+ vi job.yaml ->
+ under spec , completions is for multiple
+ parallelism is for multiple job at same time
+
+ to create job 
+
+ kubectl create cj <cjname> --image=ubuntu:22.04 --schedule="*/1 * * * *" --dry-run=client -o yaml -- /bin/sh -c "sleep 10" > mycj.yaml
+ kubectl appply -f mycj.yaml
+
+ watch kubectl get all
