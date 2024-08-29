@@ -49,7 +49,7 @@ to create private registry
 
 5. curl localhost:5000/v2/_catalog
 
--------------------------------------
+-----------------------------------
 
 to create volume for public container
 

@@ -166,7 +166,7 @@ effect
 
 none of the pod is created in master node. bcz by default master node has taint
 
-k taint no kind-worker hdd=ssd: Noschedule
+k taint no kind-worker hdd=ssd: Noschedule  --> to create taint
 
 <hdd=ssd: Noschedule > === <key=value:effect>
 
@@ -207,4 +207,138 @@ k taint no kind-worker hdd=ssd: Noschedule
  kubectl create cj <cjname> --image=ubuntu:22.04 --schedule="*/1 * * * *" --dry-run=client -o yaml -- /bin/sh -c "sleep 10" > mycj.yaml
  kubectl appply -f mycj.yaml
 
- watch kubectl get all
+ watch kubectl get all  
+ 
+
+ -------------------------------------
+
+ configMap
+
+ kubectl create cm <mycm> --from-literal=<key db-host>=<value 192.168.0.0>
+
+ kubectl create cm <configfile> --from-file=<filename.ini>
+
+
+ ----------------------------------------------------------------------------------------------------
+
+ Whenever cluster gets created , by default admin user get user . 
+
+ all the details of admin user will be stored in home directory ~/.kube/config
+
+
+~/.kube/config created when cluster is created
+
+kind-kind is admin user
+
+rollback authentication control - RBAC - where we put restriction ( this user can create a deployment object or not)
+
+-------------------------------------------------------------------------------------------------------------------
+
+Volume
+
+2 type
+
+1. Static Volume provisioning - first ,persistence Volume -> persistence Volume claim -> pod needs to created
+2. Dynamic Volume provisioning - first,  pod -> persistence Volume -> persistence Volume claim 
+
+for Dynamic Volume provisioning ,
+k8 provides storage class , for that we need to provide an attribute called " provisioner" . 
+by script
+
+2 object 
+1. persistence Volume
+2. persistence Volume claim
+
+Access mode
+1. readWriteOnce
+2. readWriteMany
+3. readOnlyMany
+
+
+Recliam policy - after delete what should happen for pod
+2 types
+1. Retain 
+2. delete
+
+
+-----------------------------------------
+
+difference between deployment & statefulset is in word
+----------------------------------
+to scale the statefulset
+
+kubectl scale sts <name> --replicas=10
+
+------------------------------
+
+network policy
+
+default CNI cluster is kindnet . it doesn't support network policy . 
+
+so config fille needts to change to
+
+
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+- role: control-plane
+- role: worker
+- role: worker
+networking:
+  disableDefaultCNI: true
+  podSubnet: 192.168.0.0/16
+
+
+  then install 
+ 1. kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/tigera-operator.yaml
+
+2.kubectl create -f https://raw.githubusercontent.com/projectcalico/calico/v3.28.1/manifests/custom-resources.yaml
+
+then ,,, watch kubectl get pods -l k8s-app=calico-node -A
+
+
+reference -> https://docs.tigera.io/calico/latest/getting-started/kubernetes/kind
+
+-----------------------------
+
+
+kubeconfig
+
+kubectl create cluster --name <mycluster > -> this will create one container , that will act as master as well as worker
+
+1 . kubectl config -h
+ kubectl config <get-clusters or get-users >
+
+ kubectl config use-context <cluester-name> -> to switch between cluster
+
+ cluset name can be determined by , kubectl config get-clusters
+ ------------------------------------------------------
+
+
+ RBAC
+ 4 objects
+ 1. role
+ 2. ClusterRole
+ 3. Rolebinding
+ 4. ClusterRoleBinding
+
+ steps is in https://github.com/kavana94488/k8s_material
+
+ -------------------------------------------
+
+
+ Node maintainance
+
+ 1. kubectl drain <node-name > 
+ 2. kubectl uncordon kind-worker2 , to allow Scheduling
+--------------------
+
+service account & serviceContext
+
+kubectl create sa <mysa>  -> to create service account
+
+get inside the po , cd proc/1 , vi status
+
+https://github.com/torvalds/linux/blob/master/include/uapi/linux/capability.h
+
+
