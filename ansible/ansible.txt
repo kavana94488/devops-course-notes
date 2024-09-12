@@ -3,6 +3,7 @@ sudo yum install ansible
 after installing 
 -------------------------------
 sudo su -
+mkdir /etc/ansible
 vi /etc/ansible/hosts
 
 in hosts , make configuration like
@@ -20,6 +21,10 @@ they are two ways to do configuration
 
 ansible webserver -m yum -a "name=apache state=present"  ---adhoc
 
+----------------
+template
+
+to modify the file at runtime then copy at remote machine
 
 In playbook we can write multiple task
 -------------------------------
@@ -41,4 +46,40 @@ after encryption , we have to decrypt the file to execute
 2.ansible-vault decrypt filename
 
 3. ansible-playbook filename --ask-vault-pass  ---> it will ask password the encrypt as well as execute the file
+
+
+------------------------------
+
+roles
+
+these is the folder structure
+
+1. defaults
+2. files
+3. vars
+4. handlers
+5. meta
+5.tasks --> shel script
+6. template
+7. tests
+---------------------
+
+to create encrypt file
+
+ansible-vault create <filename>
+
+------------------
+
+to encrypt the file
+
+ansible-vault encrypt <filename>
+
+ansible-vault decrypt <filename>
+
+------------------
+
+differentiate between playbook and playbook
+
+Playbooks are collections of one or more plays that are performed in a certain order.
+A play is an ordered sequence of tasks performed against hosts from your inventory.
 

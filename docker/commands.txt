@@ -88,3 +88,31 @@ docker network inspect bridge -> to inspect
 docker network create <network name> -> to create network
 
 docker network connect bridge <container name which wants to communcate>
+
+----------------------------------------------------------------------------
+
+docker secret 
+
+reference ->  https://medium.com/@laura_67852/docker-secrets-an-introductory-guide-with-examples-d25be5fc8e50
+
+1.Docker secrets are a secure way to manage sensitive data in your Docker environment, such as passwords, API keys, and other important information.
+
+2.  it’s important to note that Docker secrets are a Swarm feature. Swarm is a native clustering and orchestration solution for Docker.
+
+first we need to do 'docker swarm init'
+
+
+echo "mypassword" | docker secret create my_secret -
+This command will create a new secret called my_secret, containing the password “mypassword.” Notice the use of the — at the end of the command, which tells Docker to read the secret’s value from standard input instead of a file. Next, let’s create a simple service that makes use of this secret. We’ll use the official NGINX image, and our secret will be used as the basic authentication password:
+
+$ docker service create --name nginx --secret my_secret nginx:latest
+In this command, we create a new service called nginx, using the official NGINX image. We also attach our previously created secret (my_secret) to the service. Now, the secret is available to the NGINX container as a file located at /run/secrets/my_secret.
+
+
+docker secret ls -> to list the secret
+docker secret inspect <secret_name> -> this will give the json structure
+
+to see the password , 
+
+1.docker exec -it <container_name> bash 
+2. cat /run/secret/<secret_name>

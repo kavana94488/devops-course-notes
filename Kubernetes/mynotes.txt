@@ -316,6 +316,11 @@ kubectl create cluster --name <mycluster > -> this will create one container , t
 
 
  RBAC
+
+ RBAC is a model designed to grant access to resources based on the roles of individual users within an organization.
+
+ https://learnk8s.io/rbac-kubernetes
+
  4 objects
  1. role
  2. ClusterRole
@@ -341,4 +346,46 @@ get inside the po , cd proc/1 , vi status
 
 https://github.com/torvalds/linux/blob/master/include/uapi/linux/capability.h
 
+--------------------
 
+
+ 1. helm ls - to list
+
+ 2. helm create <myapp>
+
+  3.  helm  template <myapp> <myapp>/ -> this will give what is going to get created
+
+  4.  helm install <myapp> <myapp>/  -> to deploy
+ 
+ helm upgrade <myapp> <myapp>/ -> to update
+
+ curl 172.18.0.3  : 30085
+      <ip of no > : <port of service>
+
+------------------
+
+apt-cache madison kubeadm
+
+-------------------------
+
+security context reference
+
+https://www.dynatrace.com/engineering/blog/kubernetes-security-part-3-security-context/
+
+
+
+https://bluexp.netapp.com/blog/3-ways-to-save-big-and-10-price-variations-to-know-aws-cvo-blg
+
+------------------------
+
+to remove taint
+
+ kubectl taint no <master , ie hostname> node-role.kubernetes.io/control-plane:NoSchedule-
+
+
+node-role.kubernetes.io/control-plane:NoSchedule -> will get in taint <--- we hv to describe the node
+--------------
+
+prometheus is a time series database
+
+we have to have scrape_interval like duration & target - where app is running

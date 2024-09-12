@@ -1,0 +1,770 @@
+1. Scenario: You need to configure a web server on a group of servers. How would you structure your Ansible playbook to ensure that Apache is installed and running on all of them?
+Answer:
+
+yaml
+Copy code
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Install Apache
+      apt:
+        name: apache2
+        state: present
+
+    - name: Ensure Apache is running
+      service:
+        name: apache2
+        state: started
+        enabled: yes
+2. Scenario: You need to update the configuration file of a service only if the file has changed. How would you accomplish this with Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Deploy configuration file
+      copy:
+        src: /path/to/local/config
+        dest: /path/to/remote/config
+        owner: root
+        group: root
+        mode: '0644'
+      notify: Restart service
+
+  handlers:
+    - name: Restart service
+      service:
+        name: my_service
+        state: restarted
+3. Scenario: You want to deploy a new version of an application to your staging environment. How would you use Ansible to perform a canary deployment?
+Answer:
+
+yaml
+Copy code
+- hosts: staging
+  become: yes
+  tasks:
+    - name: Deploy new version to canary servers
+      copy:
+        src: /path/to/new/app
+        dest: /path/to/production/app
+      when: inventory_hostname in groups['canary']
+
+    - name: Deploy new version to all servers after validation
+      copy:
+        src: /path/to/new/app
+        dest: /path/to/production/app
+      when: inventory_hostname not in groups['canary']
+4. Scenario: You have multiple environments (development, staging, production) with different configurations. How would you manage these configurations using Ansible?
+Answer:
+
+yaml
+Copy code
+# inventory file
+[development]
+dev1 ansible_host=192.168.1.1
+dev2 ansible_host=192.168.1.2
+
+[staging]
+stag1 ansible_host=192.168.2.1
+stag2 ansible_host=192.168.2.2
+
+[production]
+prod1 ansible_host=192.168.3.1
+prod2 ansible_host=192.168.3.2
+yaml
+Copy code
+# playbook.yml
+- hosts: all
+  become: yes
+  vars_files:
+    - "vars/{{ ansible_environment }}.yml"
+  tasks:
+    - name: Deploy application
+      copy:
+        src: /path/to/app
+        dest: /path/to/deployment
+yaml
+Copy code
+# vars/development.yml
+app_version: "1.0-dev"
+
+# vars/staging.yml
+app_version: "1.0-staging"
+
+# vars/production.yml
+app_version: "1.0-prod"
+5. Scenario: You need to perform a rolling update of a cluster of web servers without downtime. How would you achieve this using Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: webservers
+  become: yes
+  serial: 1
+  tasks:
+    - name: Update application
+      copy:
+        src: /path/to/new/version
+        dest: /path/to/application
+      notify: Restart webserver
+
+  handlers:
+    - name: Restart webserver
+      service:
+        name: apache2
+        state: restarted
+6. Scenario: You need to ensure that a specific package is installed and at the latest version on all nodes. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure latest version of package
+      apt:
+        name: nginx
+        state: latest
+7. Scenario: You want to execute a command only if a specific file exists on the target host. How would you accomplish this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check if file exists
+      stat:
+        path: /path/to/file
+      register: file_status
+
+    - name: Execute command if file exists
+      command: /path/to/command
+      when: file_status.stat.exists
+8. Scenario: You need to create a user with a specific UID and GID and ensure that they are part of a specific group. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Create a user with specific UID and GID
+      user:
+        name: myuser
+        uid: 1001
+        gid: 1001
+        groups: mygroup
+        state: present
+9. Scenario: You need to deploy an application that requires a specific environment variable. How would you set this up using Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Set environment variable
+      lineinfile:
+        path: /etc/environment
+        line: 'MY_ENV_VAR=value'
+        create: yes
+10. Scenario: You want to ensure that a specific service is enabled and started on all hosts, but only if it is not already running. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure service is enabled and started
+      service:
+        name: my_service
+        state: started
+        enabled: yes
+11. Scenario: You need to handle errors gracefully during the execution of a playbook. How would you achieve this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Execute command
+      command: /path/to/command
+      ignore_errors: yes
+12. Scenario: You want to deploy a configuration only if the version of a package is below a specific threshold. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Get package version
+      command: dpkg -l | grep package_name
+      register: package_version
+
+    - name: Deploy configuration if version is below threshold
+      copy:
+        src: /path/to/config
+        dest: /path/to/deployment
+      when: "'1.0' in package_version.stdout"
+13. Scenario: You need to dynamically fetch a list of servers from an external inventory source and use it in your playbook. How would you configure this?
+Answer: Configure a dynamic inventory script in Ansible to fetch servers from an external source. Example for AWS EC2:
+
+bash
+Copy code
+ansible-playbook -i /path/to/dynamic_inventory_script.py playbook.yml
+14. Scenario: You need to remove a specific package only if it is installed. How would you do this using Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Remove package if installed
+      apt:
+        name: nginx
+        state: absent
+      when: ansible_facts.packages.nginx is defined
+15. Scenario: You want to test the changes of a playbook before applying them to the target systems. How would you perform this?
+Answer: Use the --check mode to perform a dry run of the playbook:
+
+bash
+Copy code
+ansible-playbook playbook.yml --check
+16. Scenario: You need to backup a configuration file before making changes to it. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Backup configuration file
+      copy:
+        src: /path/to/config
+        dest: /path/to/backup/config.bak
+        backup: yes
+
+    - name: Deploy new configuration
+      copy:
+        src: /path/to/new/config
+        dest: /path/to/config
+17. Scenario: You want to manage configurations for multiple applications using Ansible roles. How would you structure this?
+Answer:
+
+yaml
+Copy code
+# Directory structure
+roles/
+  app1/
+    tasks/
+      main.yml
+    templates/
+    vars/
+      main.yml
+  app2/
+    tasks/
+      main.yml
+    templates/
+    vars/
+      main.yml
+
+# Playbook.yml
+- hosts: all
+  become: yes
+  roles:
+    - app1
+    - app2
+18. Scenario: You need to ensure that a specific file is present on all nodes, but only if it doesn’t already exist. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure file is present
+      copy:
+        src: /path/to/source/file
+        dest: /path/to/destination/file
+        create: yes
+      when: not ansible_facts['file']['exists']
+19. Scenario: You need to synchronize files between multiple servers. How would you use Ansible to achieve this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Synchronize files
+      synchronize:
+        src: /path/to/source
+        dest: /path/to/destination
+20. Scenario: You want to conditionally execute tasks based on the value of a variable. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  vars:
+    deploy_app: yes
+
+  tasks:
+    - name: Deploy application
+      copy:
+        src: /path/to/app
+        dest: /path/to/deployment
+      when: deploy_app == yes
+21. Scenario: You need to perform a cleanup operation after a set of tasks are completed. How would you use Ansible to handle this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Perform operations
+      command: /path/to/command
+
+  post_tasks:
+    - name: Cleanup operation
+      command: /path/to/cleanup
+22. Scenario: You want to execute a set of tasks in parallel across multiple hosts. How would you configure this?
+Answer:
+
+yaml
+Copy code
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Execute tasks in parallel
+      command: /path/to/command
+23. Scenario: You need to install a package only if it is not already installed. How would you achieve this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install package if not present
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+24. Scenario: You want to run a playbook against a subset of hosts within a group. How would you configure this?
+Answer:
+
+yaml
+Copy code
+- hosts: webservers:canary
+  become: yes
+  tasks:
+    - name: Deploy application to canary hosts
+      copy:
+        src: /path/to/app
+        dest: /path/to/deployment
+25. Scenario: You need to perform a task only if a certain condition is met. How would you implement this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Execute task if condition met
+      command: /path/to/command
+      when: ansible_facts['os_family'] == 'Debian'
+26. Scenario: You want to use Ansible to manage a large number of servers with different configurations. How would you handle this?
+Answer: Use a combination of Ansible inventory, playbooks, and roles to manage configurations. Implement dynamic inventories for scalability and maintain separate variable files for different environments.
+
+27. Scenario: You need to monitor the status of a service and take action if it is not running. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check service status
+      service_facts:
+
+    - name: Start service if not running
+      service:
+        name: my_service
+        state: started
+      when: "'my_service' not in services"
+28. Scenario: You need to ensure that a specific version of a package is installed. How would you enforce this using Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install specific version of package
+      apt:
+        name: nginx=1.18.0-0ubuntu1
+        state: present
+29. Scenario: You want to apply changes to a specific host only if a certain condition is true. How would you implement this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Apply changes conditionally
+      command: /path/to/command
+      when: ansible_hostname == 'specific_host'
+30. Scenario: You need to install and configure a web server, but only on servers that do not already have it installed. How would you accomplish this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check if Apache is installed
+      command: dpkg -l | grep apache2
+      register: apache_status
+      ignore_errors: yes
+
+    - name: Install Apache if not installed
+      apt:
+        name: apache2
+        state: present
+      when: apache_status.rc != 0
+31. Scenario: You want to deploy a new application and ensure that its configuration is backed up before deploying the new version. How would you achieve this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Backup existing application configuration
+      copy:
+        src: /path/to/app/config
+        dest: /path/to/backup/config.bak
+        backup: yes
+
+    - name: Deploy new application version
+      copy:
+        src: /path/to/new/version
+        dest: /path/to/app
+32. Scenario: You need to configure multiple services with different configurations. How would you organize your playbooks and roles to handle this?
+Answer:
+
+Define separate roles for each service with their respective configurations.
+Use the roles section in playbooks to apply these roles to the appropriate hosts.
+yaml
+Copy code
+- hosts: all
+  become: yes
+  roles:
+    - role: webserver
+      vars:
+        config_file: /etc/webserver/config
+    - role: database
+      vars:
+        db_config_file: /etc/database/config
+33. Scenario: You need to perform tasks based on the output of a command executed on a target host. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Get system uptime
+      command: uptime
+      register: uptime_output
+
+    - name: Print uptime
+      debug:
+        msg: "System uptime: {{ uptime_output.stdout }}"
+34. Scenario: You need to execute a script on multiple hosts and ensure that it runs only once across all hosts. How would you achieve this?
+Answer: Use a combination of Ansible tasks and handlers:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Run script once
+      command: /path/to/script.sh
+      run_once: yes
+35. Scenario: You want to perform a task only if a specific condition is met across multiple hosts. How would you implement this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check condition
+      command: /path/to/check
+      register: check_status
+
+    - name: Execute task if condition met
+      command: /path/to/task
+      when: check_status.stdout == 'expected_value'
+36. Scenario: You need to ensure that certain files or directories have specific permissions and ownership. How would you enforce this with Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure directory permissions
+      file:
+        path: /path/to/directory
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+
+    - name: Ensure file permissions
+      file:
+        path: /path/to/file
+        state: file
+        mode: '0644'
+        owner: root
+        group: root
+37. Scenario: You want to create a scheduled task that runs a specific command at regular intervals. How would you set this up using Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Create a cron job
+      cron:
+        name: "Run my script every day at midnight"
+        minute: "0"
+        hour: "0"
+        job: "/path/to/script.sh"
+38. Scenario: You need to deploy a configuration change only to a subset of servers within a group. How would you target these specific servers?
+Answer:
+
+yaml
+Copy code
+- hosts: webservers:canary
+  become: yes
+  tasks:
+    - name: Deploy configuration to canary servers
+      copy:
+        src: /path/to/config
+        dest: /path/to/destination
+39. Scenario: You need to handle different configurations for different environments (e.g., dev, test, prod). How would you manage these configurations with Ansible?
+Answer: Use separate variable files for each environment and include them in your playbook.
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  vars_files:
+    - "vars/{{ ansible_environment }}.yml"
+  tasks:
+    - name: Deploy configuration
+      copy:
+        src: /path/to/config
+        dest: /path/to/destination
+40. Scenario: You want to validate configurations before applying changes. How would you use Ansible to perform validation?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Validate configuration
+      command: /path/to/validate
+      register: validation_status
+      failed_when: validation_status.rc != 0
+
+    - name: Apply changes
+      command: /path/to/apply
+      when: validation_status.rc == 0
+41. Scenario: You need to execute a set of tasks only if a specific service is not running. How would you implement this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check if service is running
+      service_facts:
+
+    - name: Execute task if service not running
+      command: /path/to/task
+      when: "'my_service' not in services"
+42. Scenario: You need to perform a series of tasks in a specific order, with each task dependent on the successful completion of the previous one. How would you structure this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: First task
+      command: /path/to/first_task
+
+    - name: Second task
+      command: /path/to/second_task
+      when: result_of_first_task.rc == 0
+
+    - name: Final task
+      command: /path/to/final_task
+      when: result_of_second_task.rc == 0
+43. Scenario: You want to configure a load balancer to distribute traffic between multiple backend servers. How would you set this up using Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: load_balancers
+  become: yes
+  tasks:
+    - name: Configure load balancer
+      template:
+        src: /path/to/load_balancer.j2
+        dest: /etc/load_balancer/config
+      notify: Restart load balancer
+
+  handlers:
+    - name: Restart load balancer
+      service:
+        name: load_balancer
+        state: restarted
+44. Scenario: You need to ensure that a specific software package is always kept at a certain version. How would you enforce this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure package is at specific version
+      apt:
+        name: nginx=1.18.0-0ubuntu1
+        state: present
+45. Scenario: You want to deploy an application only if a specific condition is met on the target servers. How would you handle this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Check condition
+      command: /path/to/check
+      register: check_status
+
+    - name: Deploy application
+      copy:
+        src: /path/to/app
+        dest: /path/to/deployment
+      when: check_status.stdout == 'expected_value'
+46. Scenario: You need to execute a script across multiple servers and ensure that the output is collected and reported. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Execute script
+      command: /path/to/script.sh
+      register: script_output
+
+    - name: Print script output
+      debug:
+        msg: "Output from {{ inventory_hostname }}: {{ script_output.stdout }}"
+47. Scenario: You need to manage and deploy configurations for a group of services running on different servers. How would you structure your playbooks and roles?
+Answer:
+
+Define separate roles for each service and use playbooks to apply these roles to the appropriate servers.
+yaml
+Copy code
+- hosts: webservers
+  become: yes
+  roles:
+    - webserver
+
+- hosts: databases
+  become: yes
+  roles:
+    - database
+
+
+48. Scenario: You want to ensure that a specific directory is created on all target servers with the correct permissions. How would you do this?
+Answer:
+
+yaml
+Copy code
+- hosts: all
+  become: yes
+  tasks:
+    - name: Ensure directory is created
+      file:
+        path: /path/to/directory
+        state: directory
+        mode: '0755'
+        owner: root
+        group: root
+
+
+49. Scenario: You need to deploy a set of updates to your servers but want to test it first on a subset of them. How would you configure this?
+Answer:
+
+yaml
+Copy code
+- hosts: test_group
+  become: yes
+  tasks:
+    - name: Deploy updates
+      copy:
+        src: /path/to/updates
+        dest: /path/to/deployment
+
+
+50. Scenario: You need to perform different tasks based on the type of host (e.g., database vs. web server). How would you manage this in Ansible?
+Answer:
+
+yaml
+Copy code
+- hosts: webservers
+  become: yes
+  tasks:
+    - name: Configure web server
+      copy:
+        src: /path/to/webserver/config
+        dest: /path/to/deployment
+
+- hosts: databases
+  become: yes
+  tasks:
+    - name: Configure database server
+      copy:
+        src: /path/to/database/config
+        dest: /path/to/deployment
+Feel free to adjust these scenarios based on your specific needs and environments!
+
+
+
+
+
+
