@@ -1,0 +1,131 @@
+to see the memory of parent and child process
+---------------------------------------------------
+
+top 
+
+pstree -p 1 -> to see the child
+
+ps -p 1 -o rss,cmd,pid -> memory of parent process
+
+ps --ppid -o rss,cmd,pid -. memory of child process
+
+
+------------------------- 
+
+terraform lifecycle and provisioner
+
+
+In Terraform, the lifecycle of a resource refers to the sequence of stages a resource goes through from creation to destruction. Understanding the lifecycle helps in managing how resources are created, updated, and destroyed. The primary stages of the Terraform lifecycle include:
+
+Creation: When you apply a configuration that includes a new resource, Terraform will create that resource according to the specifications in the configuration.
+
+Modification: When you change the configuration and run terraform apply, Terraform compares the current state with the desired state and applies the necessary updates to the resource. This can involve in-place updates or replacements of the resource.
+
+Destruction: If you remove a resource from your configuration or if you run terraform destroy, Terraform will destroy the resource according to the configuration.
+
+State Management: Throughout the lifecycle, Terraform maintains a state file that tracks the current state of resources. This state file is crucial for determining what changes need to be applied and ensuring that the actual infrastructure matches the desired configuration.
+
+Lifecycle Hooks
+
+Terraform also supports lifecycle meta-arguments to control specific aspects of resource management:
+
+create_before_destroy: Ensures that a new resource is created before the old resource is destroyed. Useful for resources that cannot be replaced in place.
+
+prevent_destroy: Prevents the resource from being destroyed. Useful for critical resources that should not be accidentally removed.
+
+ignore_changes: Specifies which resource attributes should be ignored during updates. Useful for attributes that are managed outside of Terraform.
+
+These lifecycle hooks allow you to customize how Terraform manages the creation, modification, and destruction of resources.
+
+
+
+In Terraform, a provisioner is used to execute scripts or commands on a resource after it has been created or updated. Provisioners are helpful for configuring or setting up resources in ways that go beyond what Terraform's declarative configuration can handle.
+
+Here are the main types of provisioners and their use cases:
+
+local-exec: Executes a command on the local machine where Terraform is run. Useful for tasks that need to happen on the local system or interact with local resources.
+
+
+
+provisioner "local-exec" {
+  command = "echo 'Provisioning complete!'"
+}
+remote-exec: Executes commands on the remote resource (e.g., a virtual machine) over SSH or WinRM. Useful for configuring or setting up the resource after it has been created.
+
+
+
+provisioner "remote-exec" {
+  inline = [
+    "sudo apt-get update",
+    "sudo apt-get install -y nginx"
+  ]
+
+  connection {
+    type        = "ssh"
+    host        = self.public_ip
+    user        = "ubuntu"
+    private_key = file("~/.ssh/id_rsa")
+  }
+}
+file: Uploads files from the local machine to the remote resource. Useful for transferring configuration files or scripts that need to be used on the resource.
+
+
+
+provisioner "file" {
+  source      = "scripts/setup.sh"
+  destination = "/tmp/setup.sh"
+}
+
+
+What is the purpose of the terraform init command?
+
+Answer: The terraform init command initializes a Terraform working directory. It sets up the backend, downloads provider plugins, and prepares the directory for use by Terraform commands.
+
+
+Explain the concept of Terraform workspaces.
+
+Answer: Terraform workspaces allow you to manage multiple environments (e.g., development, staging, production) within the same configuration. Each workspace has its own state file, enabling isolated environments and parallel development.
+
+-------------------
+
+1.is it possible to make commmunication between two server those are having only private IPs
+ - if it is same subnet
+ - vpc peering
+ - vpn
+---------------------------------
+ 2. In jenkins i have 10 stages , based on input i need to trigger particular stage not all stage .
+    -> need to use when condition inside the stage
+
+---------------------------------------
+
+3. I have lost  the pem key  , i have data inside the server is it possible to recover it
+ -> by deattaching the volume of the instance and attaching the same to new instance
+ -> we can login by session manager
+
+----------------------------------------------
+4. Pipeline shows the disk is out of memory and it gets failes when i checke in server it still has some memory what could be the reason and how do i troubleshoot it 
+
+-> Low Disk Space in Specific Directories:
+
+1. Jenkins uses specific directories for temporary files, build artifacts, logs, and workspace storage.
+Even if your main disk has enough space, the directory Jenkins is using might be full (e.g., /var or /tmp).
+
+2. out of i nodes
+
+-------------------------------------
+
+docker home path ---> /var/lib/jenkins
+
+5. Difference between continuous delivery and continuous deployment
+
+6. Develops says he can't login to the instance what could be the issues
+ 1. Incorrect pem key
+ 2. Ip block
+ 3. Disk usuage is full
+ 4.user block
+ 5. Check instance has public ip , it can't be in private subnet also
+ 6. instance is in unhealthy state
+ 7. Bastion Host Issues
+ 8. Ssh is allowed in security groups
+
+

@@ -1,0 +1,337 @@
+
+
+-------------------
+
+A user has launched a Windows instance. The user did not attach the key-pair with the instance while launching. How can the user connect to the same instance?
+The user can never login to that instance
+Login with the Administrator and generate a key-pair using RDP
+The user can login if the Windows Admin password is known
+Attach the security key once the instance is launched
+
+
+A user has launched a dedicated EBS backed instance with EC2. You are curious where the EBS volume for this instance will be created. Which statement is correct about the EBS volume's creation?
+The user can specify where the EBS will be created
+The EBS volume will not be created on the same tenant hardware assigned to the dedicated instance
+AWS does not allow a dedicated EBS backed instance launch
+The EBS volume will be created on the same tenant hardware assigned to the dedicated instance
+
+
+
+How can we protect accidental termination of our instances?
+By using "Enable termination protection" option
+By using security group and disabling remote access to instances.
+By using "Change shutdown behavior" option.
+We can not prevent accidental termination.
+
+
+To enable your AWS Lambda function to access your database instance inside
+Amazon VPS, you need to provide
+as VPC-specific configuration information.
+network IDs and subnet IDs
+subnet IDs and security group IDs network IDs and user group IDs
+•user group IDs and security group IDs
+
+
+
+
+Is it possible to create an AMI while an instance is running?
+Yes, if only "no reboot" option is checked No, instance should be stopped and rebooted Yes, AMI can be created without any change Yes, only if it is Linux instance
+
+
+
+What parameter is used to configure VPC when a Lambda function is created using the create-function CLI command?
+--vpc-config
+--create-function-vpc
+-- configure-vpc
+--vpc-settings
+
+
+
+• Inbound on port 80 for 0.0.0.0/0
+• Inbound on port 22 for 0.0.0.0/0
+2: SecGrp2:
+• Inbound on port 22 for 10.10.10.1/32
+If both the security groups are associated with the same instance, which of the below-mentioned statements is true?
+It is not possible to have more than one security group assigned to a single instance
+It allows inbound traffic on port 22 for IP 10.10.10.1 and for everyone else on port 80
+It allows inbound traffic for everyone on both ports 22 and 80
+It is not possible to create the security group with conflicting rules. AWS will reject the request
+
+
+
+
+You have decided to create an AWS CodePipeline that automates the deployment of your AWS Lambda file processing application. What is your first step?
+Set up a source stage to trigger pipeline.
+Set up an alpha stage to create application.
+Set up a demo stage to test pipeline.
+Set up a beta stage to deploy application.
+
+
+
+An instance running a webserver is launched in a VPC subnet. A security group and a NACL are configured to allow inbound port 80. What should be done to make web server accessible by everyone?
+Outbound Port 80 rule should be enabled on security group
+Outbound Ports 49152-65535 should be enabled on NACL
+Outbound Port 80 rule should be enabled on both security group and NACL
+All ports both inbound and outbound should be enabled on security group and NACL -
+
+
+
+You want to search the file myfile for all occurances of string containing at least five characters, where character number 2 and 5 are 'a' and character number 3 is NOT 'b'. Which command would you use?
+grep a*^b*a myfile
+grep a[^b].a myfile
+grep -[a].*
+• [a]
+myfile
+grep .a*^b..a myfile
+
+
+
+A DNS server has the IP address 192.168.0.1. Which TWO of the following need to be done on a client machine to use this DNS server?
+A. Add nameserver 192.168.0.1 to /etc/resolv.conf
+B. Run route add nameserver 192.168.0.1
+C. Run ifconfig ethO nameserver 192.168.0.1
+D. Ensure that the dns service is listen the hosts entry in the /etc/nsswitch.conf file
+E. Run bind add nameserver 192.168.0.1
+A & B
+B & D
+C& E
+
+
+
+Which of the following lines from /etc/X11/XF86Config indicates what fonts can be found on a font server?
+Fontserver a servernam
+Fonts "unix/ :7180*
+Bont
+PontPath "unia/ 7100"
+
+
+
+
+Which of the following commands should be used to allow SSH (Secure Shell) to connect to a server with IP address 192.168.0.100?
+sshd - 6192.168.0.100
+ssh -1 user 192.168.0.100
+sshd -1 user 192.168.0.100
+
+ssh -6 -1 user 192. 168.0.100
+
+
+The correct command sequence to create logical volumes on a Linux system is:
+Ivcreate, pvcreate, vgcreate, mount, mke2fs
+pucreate, vcreate, Ivcreate, mke2fs, mount
+vcreate, Ivcreate, pucreate, mount, mke2fs
+pvcreate, Ivcreate, vgcreate, mount, mke2fs
+
+
+
+A docker runs for an application. While the docker gets started, the container from the previous docker run should not be deleted. The containers from the previous run should also be copied to the new container. Which of the following command line operations should be executed to achieve the above requirement?
+docker-compose down
+• docker-compose up docker-compose build
+
+
+
+What is the command to rename a container?
+docker container rename ‹container id/name> new_name
+docker rename container ‹ container id/name> new_name
+docker rename container new_name ‹container id/name>
+None of the mentioned.
+
+
+
+A Dockerfile is written and a build is performed on the Docker file. Then a container is run on the docker to create a new image. Now the user wants another package inside the container. Which of the following steps needs to be performed to create and commit the changes on Docker?
+1. 'apt-get install' should be run inside the container.
+2. docker commit should be run outside the container.
+1. 'apt-get install' should be run outside the container.
+2. docker commit should be run outside the container.
+1. 'apt-get install' should be run inside the container.
+2. docker commit should be run inside the container.
+1. 'apt-get install' should be run inside the container.
+2. docker commit should be run inside the package.
+
+
+
+How do you run docker commands without escalated privileges? •
+Change the file permission of Docker binaries.
+Run it as a root user.
+Change permissions of Docker socket.
+Add user to Docker Group.
+
+
+
+A user is having issues with Docker. Which among the below-given commands starts Docker in debug mode?
+Set the debug key to true in the 'daemon json' file.
+Start the 'dockerd process manually with the '-logging' flag set to debug.
+Set the logging key to debugging in the 'daemon json' file.
+Start the 'dockerd' process manually with the '-raw-logs' flag set to debug.
+
+
+You discover that your Docker container needs permission to write to the host kernel log. Which of the following, passed to the Docker run command, is the best way to accomplish this task?
+-- cap_add: AUDIT_WRITE
+--privileged: AUDIT WRITE
+
+-- admin
+--privileged
+
+
+
+It is a recommended practice in the DevOps process viewpoint to keep changes to an application in version control. Which of the following will allow you to store changes to a Docker Image in a version control system?
+docker commit
+docker save
+A docker-compose.yml file.
+A docker file.
+
+
+
+Which of the following is/are true about packages in Java?
+1) Every class is part of some package.
+2) All classes in a file are part of the same package.
+3) If no package is specified, the classes in the file go into a special unnamed
+4) If no package is specified, a new package is created with folder name of class
+
+
+
+Which of the following is a valid declaration of a String in Java?
+String s = null;
+String s = *null';
+String s = (String) 'ufeed' ;
+String s = (String) "abo;
+
+
+Which of the Build Profile is defined in the project POM file, pom. xml?
+Per File
+Per Project
+Per User
+POM Server
+
+
+
+Which of the following command removes the target directory with all the build data before starting the build process?
+mvn clean
+mvn remove
+mvn clear
+mvn build
+
+
+
+Which resource cannot be defined in an Ansible Playbook?
+• Host Groups
+•Inventory File
+Fact Gathering State
+• Variables
+
+
+
+If you're cloning a repository that contains submodules, when will they be initialized in Git?
+when you pass --recurse-submodules to the git clone command only if you clone with --recursive argument
+only after 'git submodule init' and 'git submodule" update" when you clone with --submodules argument
+
+
+
+If you're cloning a repository that contains submodules, when will they be initialized in Git?
+when you pass --recurse-submodules to the git clone command
+only if you clone with --recursive argument
+only after 'git submodule init' and 'git submodule update'
+when you clone with --submodules argument
+
+
+
+species the execution point for a particular stage in the pipeline or the entire pipeline itself.
+Agent
+Executor
+Debugger
+
+
+Which of the following Git command enables to merge present topic branch with another branch, if master is a direct ancestor of topic branch?
+git masten
+git diff master git diff
+git master diff
+
+
+
+Which answer best describes Continuous Delivery?
+A software development practice where contributors are integrating their work very frequently.
+A software development discipline where software is built so that it can be released to production at any time.
+Building in 60 minutes or less.
+A software development discipline where software is released continuously as part of an automated pipeline. A software development discipline where software is released continuously as part of an automated pipeline. A software development discipline where software is released continuously as part of an automated pipeline.
+
+
+What is the proper command line syntax for testing a module and passing it as a parameter in Ansible?
+
+ansible/hacking/test-module module.py -a "key=value"
+ansible/hacking/test-module -m module.py -a "key=value" ansible/hacking/test-module -m module-py -e '{key: "value"}'
+ansible/hacking/test-module module.py -e '{key: "value"}›
+
+
+
+If the configured manifest value is a directory which file is processed in Puppet?
+site.pp init.pp
+All manifest files in the directory
+module.pp
+
+
+Which command can be used to print specific configuration of a resource instance in Puppet?
+puppet describe ‹ type> ‹name>
+puppet resource ‹ type> ‹name>
+puppet resource describe < name>
+puppet resource report ‹ type > ‹name>
+
+
+What is the benefit of integrating maven with Jenkins?
+Once integrated with Jenkins, the maven Webdriver will build the project and compilation will done efficiently
+Once integrated with Jenkins, the maven Webdriver will test the project for errors and trails for correction will occur.
+Once integrated with Jenkins, the maven Webdriver will debug the files deploy the projects successfully
+Once integräted with Jenkins, the maven Webdriver will build the project and execute all tests efficiently.
+
+
+Which commands can be used to restart Jenkins manually?
+SJenkins_url/restart
+SJenkins_url/safeRestart
+(Jenkins_url)/restart (Jenkins_url)/safeRestart
+Jenkins_url: /restart
+Jenkins_url: /safeRestart
+(Jenkins_url). restart (Jenkins_url).safeRestart
+
+
+
+How does 'git merge' handle whitespace differences between versions?
+They are ignored by default, this can be turned on They are significant by default, this can be turned off
+Git can't track whitespace dimerences
+It depends on the operating system
+
+
+
+
+You are working in Puppet and would like to generate an empty skeleton of directories in preparation for creating a module. What would you use to create the skeleton of directories?
+Using puppet create skeleton command.
+Using puppet create directories command.
+Using puppet generate skeletons tool.
+Using puppet module generator tool.
+
+
+
+
+You're using Puppet Standalone with two manifest files. In which of the following cases will accidental changes be automatically reverted?
+Only on the initial run.
+Never.
+On every run.
+
+Only when the appropriate manifest is applied.
+
+
+
+What's the difference between Continuous Delivery and Continuous Deployment?
+Continuous Delivery means the code CAN be released at any time, while Continuous Deployment means it is released continuously.
+Continuous Delivery and Continuous Deployment are the same thing.
+Continuous Deployment means a longer time between releases.
+Continuous Deployment means the code CAN be released at any time, while Continuous Delivery means it is released continuously.
+
+
+
+You have created a new workspace called DEv under directory /home/quiz_experts/iac/ and initialized terraform by running terraform init command with loca/ backend. If you run terraform apply, where will Terraform write its state data?
+/home/quiz_experts/iac/workspace.d/DEV/terraform.tfstate
+/home/quiz_experts/iac/terraform.tfstate.d/DEV/terraform.tfstate
+/home/quiz_experts/iac/terraform.tfstate.d/terraform.tfstate
+/home/quiz_experts/iac/workspace.d/terraform.tstate
+
+
+
+
